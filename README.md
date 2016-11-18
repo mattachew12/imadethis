@@ -39,6 +39,12 @@ This will allow you to build a good project without expending an excessive amoun
 There are no other scheduled checkpoints for your project. 
 You must be done in time to present it to me before the term ends. 
 
+#### Turning in Your Outline / Project
+
+Deploy your outline, in the form of a webpage, to Heroku.
+Ensure that your project has the proper naming scheme (cs4241-finalproject-yourGitHubUsername) so we can find it.
+Folks on the same team should post the same webpage.
+
 ## Final Presentation
 
 Presentations will occur during the final week of class.
