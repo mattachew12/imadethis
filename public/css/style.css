@@ -14,79 +14,30 @@ html {
 }
 
 .content {
-    padding: 100px;    
-}
-
-#topPortion {
-    float: top;    
-    width: 100%;   
+    padding-left: 30px;  
+    padding-top: 10px;
 }
 
 table {    
     float: left;
-    width: 50%;
+    width: 100%;
     padding-bottom: 20px;
     padding-right: 20px;
 }
 
-img {
-    float: right;
-    width: 50%     
+p {
+    float: left;   
 }
 
-#bottomPortion {
-    float: left;
-    width: 100%;
+img {
+    float: left;   
 }
 
 td {
-    text-align: center;
-    font-style: inherit;
+    text-align: left;
+    font-style: inherit;    
 }
 
-.treeNameRow {
-    border: 2px solid black;    
-    padding: 5px; 
-    width: 240px;         
-}
-
-.tableSpacer {
-    width: 30px;
-}
-
-.lineageSeparator {
-    
-}
-
-.perished {
-    font-style: italic;
-}
-
-#legends {
-    font-family: 'Asap', sans-serif;
-    float: left;
-}
-
-#tableLegend {
-    font-style: italic;
-}
-
-#benediction{
-    text-align: center;    
-}
-
-span {
-    font-style: oblique;
-}
-
-a:link {
-    color: blue;     
-}
-
-a:visited {
-    color: purple;     
-}
-
-a:hover {
-    color: steelblue;     
+#separator {
+    height: 20px;
 }

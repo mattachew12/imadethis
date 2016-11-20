@@ -5,13 +5,16 @@ var http = require('http')
 
 var server = http.createServer (function (req, res) {
   var uri = url.parse(req.url)
-
+  
   switch( uri.pathname ) {
     case '/':
       sendFile(res, 'public/index.html')
       break
     case '/index.html':
       sendFile(res, 'public/index.html')
+      break
+    case '/pictures/Outline.JPG':
+      sendFile(res, 'public/pictures/Outline.JPG', 'image/png')
       break
     case '/css/style.css':
       sendFile(res, 'public/css/style.css', 'text/css')
