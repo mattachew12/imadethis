@@ -1,30 +1,89 @@
 <html lang="en">
   <head>
-    <title>CS4241 Assignment 2</title>
+    <title>CS4241 Final Project Outline</title>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
     <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
     <script src="js/scripts.js"></script>
   </head>
   <body>
-    
-    <div class="content">           
-        <table>
-            <thead><h1>IMadeThis website mockup</h1></thead>                
-            <tr><td class="image"><img alt="Main Page" src="/pictures/MainPage.jpg"></td></tr>
-            <tr><td class="imgText">Main Page</td></tr>            
-            <tr><td class="image"><img alt="Main Page" src="/pictures/MainPage.jpg"></td></tr>
-            <tr><td class="imgText">Main Page</td></tr>            
-            <tr><td class="image"><img alt="Main Page" src="/pictures/MainPage.jpg"></td></tr>
-            <tr><td class="imgText">Main Page</td></tr>            
-            <tr><td class="image"><img alt="Main Page" src="/pictures/MainPage.jpg"></td></tr>
-            <tr><td class="imgText">Main Page</td></tr>            
-            <tr><td class="image"><img alt="Main Page" src="/pictures/MainPage.jpg"></td></tr>
-            <tr><td class="imgText">Main Page</td></tr>                                
-            <tr id="separator"></tr>
-            <tr><td class="imgText">Summary Outline</td></tr>
-            <tr><td class="image"><img alt="Description" src="/pictures/Outline.JPG"></td></tr>            
-        </table>                                
+    <div id="header">
+    	<h1>IMadeThis.com Website Mockup</h1>
+        Tanuj Sane, Nikhil Castelino, Matthew Piazza
+    </div>
+    <div class="content">  
+        <h3>Description</h3>
+        <p>IMadeThis.com is a bartering site for hobby craftsmen. it is used to swap crafts that users have made without bringing money into the mix. Once swaps have been 
+        set up, the order will be confirmed and theoretically the users would mail the items to the organization which would then forward them on to the other user.
+        This middle-man approach is to protect users and personal information. Shipping costs are paid by the users. <br><br>For visualization, scroll down to our mockups.</p>
+        
+        <h3>Technical Aspects</h3>
+        <ol>
+            <li>Sqlite3:<span> &emsp;&emsp;&emsp;&emsp;&nbsp; This project will require significant organization and structuring of a database for storing all the user data, item descriptions, and messages we plan to accumulate.</span></li>
+            <li>Ajax:<span>&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp; Ajax will be used as users search for items for rapid suggestion and filtering</span></li>
+            <li>Bootstrap:<span>&emsp;&emsp;&emsp; Bootstrap will be supporting the structure of our project as whole.</span></li>
+            <li>Confidentiality:<span>&nbsp;&nbsp;Protecting user information will also be one of our pursuits throughout this project, which we will delve into more and identify as we research it further.</span></li>
+        </ol>
+        
+        <h3>High Priorities</h3>
+        
+        <ol>
+            <li>Main Page:<span>This page brings up a random selection of items for trade to browse once the user has logged in. 
+        Searches for specific items or categories can be made from here, or a new random selection may be retrieved at the press of a button.</span></li>
+            <li>Portfolio:<span>&emsp;In the portfolio view users will control their own craft listings and descriptions. This will be a similar UI to browsing the portfolio of another user, and we are considering adding a value estimation to the items as set by the users.</span></li>
+            <li>Trading UI:<span>In the trading UI, which is not shown below, users will be able to propose and counter-offer trades. There will be 4 panels, the outer two of which are the listings of items of each user, and the middle two panes of which are where the items being traded are displayed and dropped into. We haven't decided upon whether to use a drag-and-drop system, simple click for swapping between the two panels, or multiple-item selection where each desired item would just be outlined and have a checkmark in the corner. Once finished, a proposal would be sent to the other user who would see the notification and be able to send it back with any edits desired. Once both users have accepted it, the trade is solidified and the users send their items to IMadeThis's mailing distribution center.</span></li>
+        </ol>
+                
+        <h3>Lower Priorities</h3>
+        <p>
+        Other windows we are considering adding include a messaging service similar in style and usage to Facebook's Messenger. While browsing for items or in the middle
+        of trades, users could save other users as contacts and keep watching for future items they post. Messages can be sent without permission or becoming contacts first,
+        so a block or mute system would also be necessary.</p>
+        
+        <p>We also are going to have an Account Settings window for updating user information such as display name, mailing address, and phone number. These last two
+        are not visible by other users but only for the purpose of IMadeThis being able to forward items or reach out to users if something goes wrong. An Order History
+        Window is also desired but not necessary.        
+        </p>               
+        <table> 
+            <thead><td colspan="2"><h1>Mockups</h1></td></thead>
+            <tr><td class="imgText"><h2>Main Browsing Home Page</h2></td></tr> 
+            <tr>
+                <td class="image"><img alt="Main Page" src="/pictures/browse.jpg"></td>
+                <td><ul>
+                    <li>Website-selected offers, refreshed to new listing with “I’m Feeling Lucky” button</li>
+                    <li>Search by pre-defined category dropdown and/or by name</li>
+                    <li>Ajax query as you type</li>
+                </ul></td>
+            </tr>                  
+            <tr><td class="imgText"><h2>Messaging Inbox System</h2></td></tr>     
+            <tr>
+                <td class="image"><img alt="Main Page" src="/pictures/inbox.jpg"></td>
+                <td><ul>
+                    <li>Inbox similar to Facebook Messenger style</li>
+                    <li>Read and compose private messages</li>
+                    <li>Block/Mute contacts </li>
+                </ul></td>
+            </tr>                  
+            <tr><td class="imgText"><h2>Portfolio Page</h2></td></tr>            
+            <tr>
+                <td class="image"><img alt="Main Page" src="/pictures/portfolio.jpg"></td>
+                <td><ul>
+                    <li>Add crafts to portfolio</li>
+                    <li>Edit and delete existing items</li>                    
+                </ul></td>
+            </tr>    
+            <tr><td class="imgText"><h2>Edit Your Own Craft Descriptions</h2></td></tr>                                
+            <tr><td class="image"><img alt="View Own Products" src="/pictures/productview_edit.jpg"></td></tr>                 
+            <tr><td class="imgText"><h2>View Another's Product</h2></td></tr>            
+            <tr>
+                <td class="image"><img alt="View Another's Product" src="/pictures/productview_browse.jpg"></td>
+                <td><ul>
+                    <li>Send proposal to other hobbyist</li>
+                    <li>Monetary value estimation possibly</li>                    
+                    <li>Pure bartering system through proposing, counter-offering, and accepting trades</li>             
+                </ul></td>
+            </tr>  
+        </table>           
     </div>
 
   </body>

@@ -5,25 +5,25 @@ var http = require('http')
 
 var server = http.createServer (function (req, res) {
   var uri = url.parse(req.url)
-  
-  switch( uri.pathname ) {
+  if (uri.pathname.startsWith('/pictures/')){
+    sendFile(res, 'public'+uri.pathname, 'image/png')
+  } else {
+    switch( uri.pathname ) {
     case '/':
-      sendFile(res, 'public/index.html')
-      break
+        sendFile(res, 'public/index.html')
+        break
     case '/index.html':
-      sendFile(res, 'public/index.html')
-      break
-    case '/pictures/Outline.JPG':
-      sendFile(res, 'public/pictures/Outline.JPG', 'image/png')
-      break
+        sendFile(res, 'public/index.html')        
+        break
     case '/css/style.css':
-      sendFile(res, 'public/css/style.css', 'text/css')
-      break
+        sendFile(res, 'public/css/style.css', 'text/css')
+        break
     case '/js/scripts.js':
-      sendFile(res, 'public/js/scripts.js', 'text/javascript')
-      break
+        sendFile(res, 'public/js/scripts.js', 'text/javascript')
+        break
     default:
-      res.end('404 not found')
+        res.end('404 not found')
+    }
   }
 })
 

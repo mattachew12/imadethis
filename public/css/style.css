@@ -3,14 +3,13 @@ html {
     background: lightsteelblue;
 }
 
-#header {  
-    position: fixed;
+#header {      
     margin: 0 auto;
     width: 100%;
     text-align: center;
-    background: gold;
-    top: 0px;
-    left: 0px;
+    vertical-align: middle;
+    background: blue;
+    padding: 20px;    
 }
 
 .content {
@@ -23,21 +22,37 @@ table {
     width: 100%;
     padding-bottom: 20px;
     padding-right: 20px;
-}
-
-p {
-    float: left;   
+    position: relative;
+    top: 100px;    
 }
 
 img {
-    float: left;   
+    float: left; 
+    padding-bottom: 100px; 
+    width: 100%;
 }
+
+ul li {    
+    font-size: 20px;
+    padding: 10px;
+}
+
+ol li {
+    padding-bottom: 10px;
+    font-size: 20px;     
+}
+
 
 td {
     text-align: left;
     font-style: inherit;    
 }
 
-#separator {
-    height: 20px;
+h1 {    
+    text-align: center;
+}
+
+span {
+    padding-left: 10px; 
+    font-size: 16px;
 }
