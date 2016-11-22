@@ -5,9 +5,6 @@ var http = require('http')
 
 var server = http.createServer (function (req, res) {
   var uri = url.parse(req.url)
-  if (uri.pathname.startsWith('/pictures/')){
-    sendFile(res, 'public'+uri.pathname, 'image/jpg')
-  } else {
     switch( uri.pathname ) {
     case '/':
         sendFile(res, 'public/index.html')
