@@ -15,8 +15,17 @@ var server = http.createServer (function (req, res) {
     case '/pictures/browse.jpg':
         sendFile(res, 'public/pictures/browse.JPG', 'image/png')      
         break
-    case '/pictures/outline.jpg':
-        sendFile(res, 'public/pictures/outline.JPG', 'image/png')          
+    case '/pictures/inbox.jpg':
+        sendFile(res, 'public/pictures/inbox.JPG', 'image/jpg')          
+        break
+    case '/pictures/portfolio.jpg':
+        sendFile(res, 'public/pictures/portfolio.JPG', 'image/png')          
+        break
+    case '/pictures/productview_browse.jpg':
+        sendFile(res, 'public/pictures/productview_browse.JPG', 'image/png')          
+        break
+    case '/pictures/productview_edit.jpg':
+        sendFile(res, 'public/pictures/productview_edit.JPG', 'image/png')          
         break
     case '/css/style.css':
         sendFile(res, 'public/css/style.css', 'text/css')
@@ -27,7 +36,6 @@ var server = http.createServer (function (req, res) {
     default:
         res.end('404 not found')
     }
-  }
 })
 
 server.listen(process.env.PORT || port);
