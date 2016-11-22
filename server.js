@@ -16,10 +16,10 @@ var server = http.createServer (function (req, res) {
         sendFile(res, 'public/index.html')        
         break
     case '/pictures/browse.jpg':
-        sendFile(res, 'public/'+uri.pathname, 'image/jpg')      
+        sendFile(res, 'public/pictures/browse.JPG', 'image/png')      
         break
     case '/pictures/outline.jpg':
-        sendFile(res, 'public/outline.jpg', 'image/jpg')      
+        sendFile(res, 'public/pictures/outline.JPG', 'image/png')          
         break
     case '/css/style.css':
         sendFile(res, 'public/css/style.css', 'text/css')
