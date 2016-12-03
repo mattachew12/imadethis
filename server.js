@@ -1,43 +1,19 @@
-var http = require('http')
-  , fs   = require('fs')
-  , url  = require('url')
-  , port = 8080;
+var express = require('express')
+  , path = require('path')
+  , port = 5000;
 
-var server = http.createServer (function (req, res) {
-  var uri = url.parse(req.url)
-  if (uri.pathname.startsWith('/pictures/')){
-    sendFile(res, 'public'+uri.pathname, 'image/jpg')
-  } else {
-    switch( uri.pathname ) {
-    case '/':
-        sendFile(res, 'public/index.html')
-        break
-    case '/index.html':
-        sendFile(res, 'public/index.html')        
-        break
-    case '/css/style.css':
-        sendFile(res, 'public/css/style.css', 'text/css')
-        break
-    case '/js/scripts.js':
-        sendFile(res, 'public/js/scripts.js', 'text/javascript')
-        break
-    default:
-        res.end('404 not found')
-    }
-  }
-})
+var app = express();
 
-server.listen(process.env.PORT || port);
-console.log('listening on 8080')
-// subroutines
+// serve all files in public directory
+app.use(express.static('public', {"index":"index.html"}));
 
-function sendFile(res, filename, contentType) {
-  contentType = contentType || 'text/html';
+// handle 404 error with simple page bringing them back to home page
+// (ALWAYS Keep this as the last route to handle all unhandled cases)
+app.get('*', function(req, res){
+  res.redirect('404.html');
+});
 
-  fs.readFile(filename, function(error, content) {
-    res.writeHead(200, {'Content-type': contentType})
-    if (contentType == 'text/html') {res.end(content, 'utf-8')}
-    else {res.end(content, 'binary')}
-  })
-
-}
+// listen on port
+app.listen(port, function () {
+    console.log('listening on '+port);
+});
