@@ -1,0 +1,20 @@
+/* 
+ * style.css
+ * Style definitions for application theme 
+ *
+ * Authors:
+ * - Tanuj Sane
+ * - Nikhil Castelino
+ * - Matthew Piazza
+ *
+ * Usage:
+ * <link rel="stylesheet" href="/style.css">
+ */
+
+:root {
+    --theme-green-dark1: #417F74;
+    --theme-green-dark2: #047F68;
+    --theme-green-mid: #68CCB9;
+    --theme-green-bright: #36FFD9;
+    --theme-green-light: #82FFE7;
+}
