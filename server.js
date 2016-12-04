@@ -6,7 +6,7 @@ var express = require('express')
 var app = express();
 
 // initialize database
-var db = new sqlite3.Database('imadethisDB.sqlite');
+var db = new sql.Database('private/imadethisDB.sqlite');
 createDatabaseTables(db);
 
 // serve all files in public directory
@@ -23,6 +23,11 @@ app.listen(port, function () {
     console.log('listening on '+port);
 });
 
+
+
+//////////////////////////////////
+//      helper functions
+//////////////////////////////////
 function createDatabaseTables(db){
   // defining the tables
   var createString = "CREATE TABLE IF NOT EXISTS ";
@@ -42,7 +47,7 @@ function createDatabaseTables(db){
   itemsCreateString = itemsCreateString + "itemID INTEGER PRIMARY KEY,";
   itemsCreateString = itemsCreateString + "username VARCHAR(35) NOT NULL REFERENCES Users(username) ON DELETE CASCADE,";
   itemsCreateString = itemsCreateString + "name VARCHAR(35) NOT NULL,";
-  itemsCreateString = itemsCreateString + "description VARCHAR(2000),";
+  itemsCreateString = itemsCreateString + "description VARCHAR(500),";
   itemsCreateString = itemsCreateString + "mainImage VARCHAR(35) NOT NULL" + ");";
   
   var itemImagesCreateString = createString + "ItemImages (";
