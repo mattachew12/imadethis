@@ -8,7 +8,7 @@
  * - Matthew Piazza
  *
  * Usage:
- * <link rel="stylesheet" href="/style.css">
+ * <link rel="stylesheet" href="style.css">
  */
 
 :root {
@@ -17,4 +17,18 @@
     --theme-green-mid: #68CCB9;
     --theme-green-bright: #36FFD9;
     --theme-green-light: #82FFE7;
+}
+
+header {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    padding: 1%;
+}
+
+footer {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    padding: 1%;
 }
