@@ -1,14 +1,11 @@
 var express = require('express')
   , path = require('path')
-  , bodyParser = require("body-parser")
   , fs   = require('fs')
   , qs   = require('querystring')
   , sql = require('sqlite3')
   , port = process.env.PORT || 8080;
 
 var app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // initialize database
 var db = new sql.Database('private/imadethisDB.sqlite');
@@ -28,10 +25,9 @@ app.listen(port, function () {
     console.log('listening on '+port);
 });
 
-
-//////////////////////////////////
-//      helper functions
-//////////////////////////////////
+//////////////////////////////////////////////////////
+//       server initialization functions
+//////////////////////////////////////////////////////
 function createDatabaseTables(db){
   // defining the tables
   var createString = "CREATE TABLE ";
@@ -75,6 +71,144 @@ function createIfNullDB(tableName, sqlCreateCmd){
         if (!exists) db.run(sqlCreateCmd);
     }); 
 }
+
+//////////////////////////////////////////////////////
+//       database access functions
+//////////////////////////////////////////////////////
+
+function getUserItems(user, pw){
+    var allItems = [];
+    if (!validateUser(user, pw)) return allItems; // return empty
+    var query = 'SELECT name, description, mainImage FROM items WHERE username="'+user+'"';
+    db.each(query, function(err, row) { 
+        item = [row.name, row.description, row.mainImage];
+        allItems.push(item);        
+    }, function() {
+        console.log(allItems);
+    }); 
+}
+
+function getItem(user, pw, itemID){
+    var item = ["Invalid", "Invalid", "None"];
+    if (!validateUser(user, pw)) return item;
+    var query = 'SELECT name, description, mainImage FROM items WHERE username="'+user+'" AND itemID='+itemID;
+    db.each(query, function(err, row) { 
+        item = [row.name, row.description, row.mainImage];              
+    }, function() {
+        console.log(item);
+    }); 
+}
+
+function getItemImagePaths(user, pw, itemID){
+    var paths = [];
+    if (!validateUser(user, pw)) return paths; // return empty list
+    var query = 'SELECT filepath FROM itemImages WHERE itemID='+itemID;
+    db.each(query, function(err, row) { 
+        paths.push(row.filepath);
+    }, function() {
+        console.log(paths);
+    }); 
+}
+
+function addItem(user, pw, name, desc, mainImg, otherImages){    
+    if (validateUser(user, pw)) {        
+        db.serialize(function() {
+            // create new item entry
+            db.run('INSERT INTO items VALUES ("'+user+'", "'+name+'", "'+desc+'", "'+mainImg+'")');
+            // add corresponding image entries
+            var query = 'SELECT itemID FROM items WHERE username="'+user+'" AND name="'+name+'"';
+            query = query + ' AND description="'+desc+'" AND mainImage="'+mainImg;  
+            db.each(query, function(err, row) {                 
+                db.run('INSERT INTO itemImages VALUES ("'+row.itemID+'", "'+mainImg+'")');
+                var index;
+                for (index = 0; index < otherImages.length; ++index){
+                    db.run('INSERT INTO itemImages VALUES ("'+row.itemID+'", "'+otherImages[index]+'")');
+                }
+            });             
+        });
+    }
+}
+
+function remItem(user, pw, itemID){ // itemImages must be deleted as well
+    if (validateUser(user, pw)) {        
+        db.serialize(function() {
+            db.run('DELETE FROM items WHERE username="'+user+'" AND itemID='+itemID;)
+            db.run('DELETE FROM itemImages WHERE itemID='+itemID;)
+            db.run('DELETE FROM tradeItems WHERE itemID='+itemID;)
+        });
+    }
+}
+
+//////////////////////////////////////////////////////
+//       trading functions
+//////////////////////////////////////////////////////
+
+function proposeTrade(userOffer, pw, userRecv, offeredItemIDs, desiredItemIDs){    
+    if (validateUser(userOffer, pw)) {        
+        db.serialize(function() {
+            // create new trade entry
+            db.run('INSERT INTO trades VALUES ("'+userOffer+'", "'+userRecv+'", 1)');
+            // add corresponding image entries
+            var query = 'SELECT tradeID FROM trades WHERE offer="'+userOffer+'" AND recv="'+userRecv+'"';
+            db.each(query, function(err, row) {                 
+                var index;
+                for (index = 0; index < desiredItemIDs.length; ++index){
+                    db.run('INSERT INTO tradeItems VALUES ("'+row.tradeID+'", "'+desiredItemIDs[index]+'")');
+                }
+                for (index = 0; index < offeredItemIDs.length; ++index){
+                    db.run('INSERT INTO tradeItems VALUES ("'+row.tradeID+'", "'+offeredItemIDs[index]+'")');
+                }
+            });             
+        }, function(){
+            //sendTrade(); // TODO
+        });
+    }
+}
+
+function counterTrade(userOffer, pw, tradeID, offeredItemIDs, desiredItemIDs){    
+    if (validateUser(userOffer, pw)) {        
+        db.serialize(function() {
+            // flip offering and receiving user in trade table
+            var query = 'SELECT offer FROM trades WHERE recv="'+userOffer+'" AND tradeID='+tradeID;
+            db.each(query, function(err, row) {    
+                db.run('UPDATE tradeItems SET offer="'+userOffer+'", recv="'+row.offer+'" WHERE recv="'+userOffer+'" AND tradeID='+tradeID);
+                
+                // replace items in trade
+                db.run('DELETE FROM tradeItems WHERE tradeID='+tradeID);
+                var index;
+                for (index = 0; index < desiredItemIDs.length; ++index){
+                    db.run('INSERT INTO tradeItems VALUES ("'+row.tradeID+'", "'+desiredItemIDs[index]+'")');
+                }
+                for (index = 0; index < offeredItemIDs.length; ++index){
+                    db.run('INSERT INTO tradeItems VALUES ("'+row.tradeID+'", "'+offeredItemIDs[index]+'")');
+                }
+            });             
+        }, function(){
+            //sendTrade(); // TODO
+        });
+    }
+}
+
+function acceptTrade(user, pw, tradeID){    
+    if (validateUser(user, pw)) {        
+        db.run('UPDATE tradeItems SET pending=0 WHERE recv="'+user+'" AND tradeID='+tradeID)    
+        db.each("SELECT itemID FROM tradeItems WHERE tradeID="+tradeID, function(err, row) {   
+            remItem(user, pw, row.itemID); // remove all trace of an item from database
+        }        
+    }
+}
+
+//////////////////////////////////////////////////////
+//       authorization functions
+//////////////////////////////////////////////////////
+
+function validateUser(user, pw){
+    return true; // TODO
+}
+
+//////////////////////////////////////////////////////
+//       miscellaneous server functions
+//////////////////////////////////////////////////////
 
 function sendFile(res, filename, contentType) {
   contentType = contentType || 'text/html';
