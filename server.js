@@ -81,7 +81,7 @@ function getUserItems(user, pw){
     if (!validateUser(user, pw)) return allItems; // return empty
     var query = 'SELECT name, description, mainImage FROM items WHERE username="'+user+'"';
     db.each(query, function(err, row) { 
-        item = [row.name, row.description, row.mainImage];
+        item = {"name":row.name, "description":row.description, "mainImage":row.mainImage];
         allItems.push(item);        
     }, function() {
         console.log(allItems);
@@ -93,7 +93,7 @@ function getItem(user, pw, itemID){
     if (!validateUser(user, pw)) return item;
     var query = 'SELECT name, description, mainImage FROM items WHERE username="'+user+'" AND itemID='+itemID;
     db.each(query, function(err, row) { 
-        item = [row.name, row.description, row.mainImage];              
+        item = {"name":row.name, "description":row.description, "mainImage":row.mainImage];              
     }, function() {
         console.log(item);
     }); 
