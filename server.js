@@ -81,7 +81,7 @@ function getUserItems(user, pw){
     if (!validateUser(user, pw)) return allItems; // return empty
     var query = 'SELECT name, description, mainImage FROM items WHERE username="'+user+'"';
     db.each(query, function(err, row) { 
-        item = {"name":row.name, "description":row.description, "mainImage":row.mainImage];
+        item = {"name":row.name, "description":row.description, "mainImage":row.mainImage};
         allItems.push(item);        
     }, function() {
         console.log(allItems);
@@ -93,7 +93,7 @@ function getItem(user, pw, itemID){
     if (!validateUser(user, pw)) return item;
     var query = 'SELECT name, description, mainImage FROM items WHERE username="'+user+'" AND itemID='+itemID;
     db.each(query, function(err, row) { 
-        item = {"name":row.name, "description":row.description, "mainImage":row.mainImage];              
+        item = {"name":row.name, "description":row.description, "mainImage":row.mainImage};              
     }, function() {
         console.log(item);
     }); 
@@ -132,9 +132,9 @@ function addItem(user, pw, name, desc, mainImg, otherImages){
 function remItem(user, pw, itemID){ // itemImages must be deleted as well
     if (validateUser(user, pw)) {        
         db.serialize(function() {
-            db.run('DELETE FROM items WHERE username="'+user+'" AND itemID='+itemID;)
-            db.run('DELETE FROM itemImages WHERE itemID='+itemID;)
-            db.run('DELETE FROM tradeItems WHERE itemID='+itemID;)
+            db.run('DELETE FROM items WHERE username="'+user+'" AND itemID='+itemID);
+            db.run('DELETE FROM itemImages WHERE itemID='+itemID);
+            db.run('DELETE FROM tradeItems WHERE itemID='+itemID);
         });
     }
 }
@@ -191,10 +191,10 @@ function counterTrade(userOffer, pw, tradeID, offeredItemIDs, desiredItemIDs){
 
 function acceptTrade(user, pw, tradeID){    
     if (validateUser(user, pw)) {        
-        db.run('UPDATE tradeItems SET pending=0 WHERE recv="'+user+'" AND tradeID='+tradeID)    
+        db.run('UPDATE tradeItems SET pending=0 WHERE recv="'+user+'" AND tradeID='+tradeID);    
         db.each("SELECT itemID FROM tradeItems WHERE tradeID="+tradeID, function(err, row) {   
             remItem(user, pw, row.itemID); // remove all trace of an item from database
-        }        
+        });        
     }
 }
 
