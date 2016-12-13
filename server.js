@@ -12,7 +12,7 @@ var db = new sql.Database('private/imadethisDB.sqlite');
 createDatabaseTables(db);
 
 // serve all files in public directory
-app.use(express.static('public', {"index":"dashboard.html"}));
+app.use(express.static('public', {"index":"login.html"}));
 
 // handle 404 error with simple page bringing them back to home page
 // (ALWAYS Keep this as the last route to handle all unhandled cases)
