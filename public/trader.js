@@ -31,6 +31,7 @@ function populatePossTradeItems() {
         elVendorItems.innerHTML = "";
         var index = 0;
         for (index = 0; index < response.clientItems.length; index++){
+            console.log(response.clientItems[index]);
             item = '<div class="card">';
             item += '<div class="card-block">'
             item += '<h4 class="card-title">Card title</h4>'
@@ -44,6 +45,7 @@ function populatePossTradeItems() {
             elMyItems.innerHTML += item;
         }
         for (index = 0; index < response.vendorItems.length; index++){
+            console.log(response.vendorItems[index]);
             item = '<div class="card">';
             item += '<div class="card-block">'
             item += '<h4 class="card-title">Card title</h4>'
