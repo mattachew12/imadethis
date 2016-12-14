@@ -28,7 +28,8 @@
 
     <script>
         function goBack() {
-            window.location = 'main.html';
+            if(window.sessionStorage.getItem('account')) window.location = 'main.html';
+            else window.location = 'login.html';
         }
     </script>
 </body>

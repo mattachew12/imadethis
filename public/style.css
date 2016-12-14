@@ -23,15 +23,7 @@
     display: block;
 }
 
-.msg {
-    width: 50%;
-}
-
-.msg-mine {
+.item-card > img {
+    height: 180px;
     width: 100%;
-    background-color: black;
-}
-
-.msg-mine > .alert {
-    width: 50%;
 }
