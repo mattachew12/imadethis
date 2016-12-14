@@ -48,7 +48,7 @@
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
 
-        <div class="col-md-3" id="message-list">
+        <div class="col-md-3" id="message-list" style="display: none;">
             <div class="card card-block">
                 <h4 class="card-title">[Name]</h4>
                 <h6 class="card-subtitle text-muted">[Message Snippet ...]</h6>
@@ -58,7 +58,7 @@
                 <h6 class="card-subtitle text-muted">[Message Snippet ...]</h6>
             </div>
         </div>
-        <div class="card col-md-9 affix" id="messageview">
+        <div class="card col-md-9 affix" id="messageview" style="display: none;">
             <div class=" card-block ">
                 <h4 class="card-title ">[Name]</h4>
                 <h6 class="card-subtitle text-muted ">[Username]</h6>
@@ -96,6 +96,10 @@
     </div>
 
     <script>
+        window.onload = function () {
+            if(!window.localStorage.removeItem('account')) window.location = 'login.html';
+        }
+
         function performLogout() {
             window.localStorage.removeItem('account');
             window.location = 'login.html';

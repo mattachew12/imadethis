@@ -159,7 +159,11 @@
                 case 'password-invalid':
                     password.parentElement.setAttribute('class', 'form-group has-danger');
                     break;
-                default:
+                case 'success':
+                    window.sessionStorage.setItem('account', JSON.stringify({
+                        u: username.value,
+                        p: password.value
+                    }));
                     if(rememberme.checked === 'true') {
                         window.localStorage.setItem('account', JSON.stringify({
                             u: username.value,
