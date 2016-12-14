@@ -1,11 +1,26 @@
-var express = require('express'),
-    path = require('path'),
-    fs = require('fs'),
-    url = require('url'),
-    qs = require('querystring'),
-    sql = require('sqlite3'),
-    port = process.env.PORT || 8080;
+/* 
+ * server.js
+ * All code necessary for creating the back-end of IMadeThis.com
+ *
+ * Authors:
+ * - Tanuj Sane
+ * - Nikhil Castelino
+ * - Matthew Piazza
+ */
+ 
+//////////////////////////////////////////////////////
+//       initialization
+//////////////////////////////////////////////////////
 
+// get necessary modules
+var express = require('express');
+var path = require('path');
+var fs = require('fs');
+var qs = require('querystring');
+var sql = require('sqlite3');
+
+// initialize server variables
+var port = process.env.PORT || 8080;
 var app = express();
 
 // initialize database
@@ -15,6 +30,10 @@ var categories = ["fantasy", "sci-fi", "craft", "practical", "misc"]
 var db = new sql.Database('private/imadethisDB.sqlite');
 createDatabaseTables(db);
 getSerialIDs(); // no conflict running in parallel with createDatabaseTables
+
+//////////////////////////////////////////////////////
+//       POST/GET requests
+//////////////////////////////////////////////////////
 
 // serve all files in public directory
 app.use(express.static('public', {
@@ -39,6 +58,24 @@ app.post('/login', function (req, res) {
             });
         });
     }
+});
+
+app.post('/getPossTradeItems', function (req, res) {
+    var d = '';
+    req.on('data', (data) => {
+        d += data;
+    });
+    req.on('end', () => {
+        var q = qs.parse(d);
+        getUserItems(q.username, q.password, q.username, (clientRows) =>  {
+            getUserItems(q.username, q.password, q.other, (vendorRows) =>  {
+                res.send(JSON.stringify({
+                    clientItems: clientRows,
+                    vendorItems: vendorRows
+                }));
+            });
+        });
+    });
 });
 
 // handle 404 error with simple page bringing them back to home page
@@ -128,22 +165,18 @@ function getSerialIDs() {
 //       database access functions
 //////////////////////////////////////////////////////
 
-function getUserItems(user, pw, callback) {
+function getUserItems(user, pw, itemUser, callback) {
     validateUser(user, pw, function (valid) {
         if(valid) { // authentication succeeded
-            var query = 'SELECT * FROM items WHERE username="' + user + '"';
+            var query = 'SELECT * FROM items WHERE username="' + itemUser + '"';
             db.all(query, function (err, rows) {
                 if(err) console.log(err); // handle error
-                else if(rows) {
-                    callback(rows); // use queried items
-                }
-                else {
-                    console.log("no such item");
-                }
+                callback(rows); // use queried items
             });
         }
         else { // no authentication            
-            console.log("invalid authentication");
+            console.log("invalid authentication: "+user+" | "+pw);
+            callback("invalid auth");
         }
     });
 }
@@ -151,8 +184,7 @@ function getUserItems(user, pw, callback) {
 function getItem(user, pw, itemID) {
     validateUser(user, pw, function (valid) {
         if(valid) {
-            var query = 'SELECT * FROM items WHERE username="'
-            query += user + '" AND itemID=' + itemID;
+            var query = 'SELECT * FROM items WHERE itemID=' + itemID;
             db.get(query, function (err, row) {
                 if(err) console.log(err); // handle error
                 else if(row) {

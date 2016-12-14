@@ -1,5 +1,5 @@
 /* 
- * client.js
+ * trader.js
  * Function definitions for client-side code
  *
  * Authors:
@@ -11,37 +11,56 @@
  * <script src="trader.js"></script>
  */
  
- function populateTrades() {
-    var username = document.getElementById('username');
-    var password = document.getElementById('password');
-    var rememberme = document.getElementById('rememberme');
-
-    var ajax = new XMLHttpRequest();
-    ajax.onload = function () {
-        switch(this.responseText) {
-        case 'username-invalid':
-            username.parentElement.setAttribute('class', 'form-group has-danger');
-            break;
-        case 'password-invalid':
-            password.parentElement.setAttribute('class', 'form-group has-danger');
-            break;
-        case 'success':
-            window.sessionStorage.setItem('account', JSON.stringify({
-                u: username.value,
-                p: password.value
-            }));
-            if(rememberme.checked === 'true') {
-                window.localStorage.setItem('account', JSON.stringify({
-                    u: username.value,
-                    p: password.value
-                }));
-            }
-        }
-    }
-    ajax.open('POST', '/login');
-    ajax.send('username=' + username.value + '&password=' + password.value);
-    console.log('username=' + username.value + '&password=' + password.value);
+window.onload = function () {
+    if(!window.sessionStorage.getItem('account')) window.location = 'login.html';    
 }
 
-populateUserItems()
-populateOtherItems()
+function populatePossTradeItems() {
+    var account = JSON.parse(window.sessionStorage.getItem('account'));
+    var vendorName = window.sessionStorage.getItem('vendorName');
+    document.getElementById("vendorHeader").innerText = vendorName + "'s Portfolio";
+    
+    var ajax = new XMLHttpRequest();
+    ajax.onload = function () {
+        var response = JSON.parse(this.responseText);
+        console.log(response[0]);
+        console.log(response[1]);
+        elMyItems = document.getElementById("myItems");
+        elVendorItems = document.getElementById("vendorItems");
+        elMyItems.innerHTML = "";
+        elVendorItems.innerHTML = "";
+        var index = 0;
+        for (index = 0; index < response.clientItems.length; index++){
+            item = '<div class="card">';
+            item += '<div class="card-block">'
+            item += '<h4 class="card-title">Card title</h4>'
+            item += '<h6 class="card-subtitle text-muted">Support card subtitle</h6>'
+            item += '</div>'
+            item += '<img src="..." alt="Card image">'
+            item += '<div class="card-block">'
+            item += '<p class="card-text">Some quick example text to build on the card title</p>'
+            item += '</div>'
+            item += '</div>'
+            elMyItems.innerHTML += item;
+        }
+        for (index = 0; index < response.vendorItems.length; index++){
+            item = '<div class="card">';
+            item += '<div class="card-block">'
+            item += '<h4 class="card-title">Card title</h4>'
+            item += '<h6 class="card-subtitle text-muted">Support card subtitle</h6>'
+            item += '</div>'
+            item += '<img src="..." alt="Card image">'
+            item += '<div class="card-block">'
+            item += '<p class="card-text">Some quick example text to build on the card title</p>'
+            item += '</div>'
+            item += '</div>'
+            elVendorItems.innerHTML += item;
+        }
+        if (elMyItems.innerHTML === "") elMyItems.innerHTML = "No Items to Trade";
+        if (elVendorItems.innerHTML === "") elVendorItems.innerHTML = "No Items to Trade";        
+    }
+    ajax.open('POST', '/getPossTradeItems');
+    ajax.send('username=' + account.u + '&password=' + account.p + '&other=' + vendorName);   
+}
+
+populatePossTradeItems()
