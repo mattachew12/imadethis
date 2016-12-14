@@ -6,15 +6,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div style="padding-left:30px">
-        <h3>Error: Page Not Found</h3>
-        <a href="index.html">Back to Home</a>
+    <header class="navbar bg-faded">
+        <h1 class="navbar-brand" href="/">IMadeThis</h1>
+        <span class="navbar-text float-xs-left">A trading space for makers.</span>
+    </header>
+
+    <div class="jumbotron">
+        <h1 class="display-3">Page Not Found!</h1>
+        <p class="lead">Unfortunately, IMadeThis.com does not have the page you are looking for.</p>
+        <hr class="my-2">
+        <p>If you believe this is an error, contact us at <strong><a href="mailto:support@imadethis.com">support@imadethis.com</a></strong>.</p>
+        <p class="lead">
+            <button class="btn btn-primary btn-lg" onclick="goBack();">Back to Home</button>
+        </p>
     </div>
+
+    <script>
+        function goBack() {
+            if(!window.localStorage.getItem('account')) window.location = 'login.html';
+            else window.location = 'main.html';
+        }
+    </script>
 </body>
 
 </html>

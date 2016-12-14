@@ -19,16 +19,19 @@
     --theme-green-light: #82FFE7;
 }
 
-header {
-    position: fixed;
-    top: 0px;
-    width: 100%;
-    padding: 1%;
+.form-inline label {
+    display: block;
 }
 
-footer {
-    position: fixed;
-    bottom: 0px;
+.msg {
+    width: 50%;
+}
+
+.msg-mine {
     width: 100%;
-    padding: 1%;
+    background-color: black;
+}
+
+.msg-mine > .alert {
+    width: 50%;
 }

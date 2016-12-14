@@ -11,11 +11,10 @@
 </head>
 
 <body>
-    <header class="navbar bg-faded">
+    <header class="navbar navbar-light bg-faded">
         <h1 class="navbar-brand" href="/">IMadeThis</h1>
         <span class="navbar-text float-xs-left">A trading space for makers.</span>
-
-        <form class="form-inline float-xs-right" method="POST" action="/login">
+        <div class="form-inline float-xs-right">
             <div class="form-group">
                 <label class="sr-only" for="username">Username</label>
                 <input type="email" class="form-control" id="username" placeholder="Username">
@@ -24,23 +23,23 @@
                 <label class="sr-only" for="password">Password</label>
                 <input type="password" class="form-control" id="password" placeholder="Password">
             </div>
-            <div class="form-check" style="padding-left:5px; padding-right:5px;">
+            <div class="form-check" style="padding-left:15px; padding-right:15px;">
                 <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox"> Remember Me
+                    <input class="form-check-input" id="rememberme" type="checkbox"> Remember Me
                 </label>
             </div>
-            <button type="submit" class="btn btn-primary" name="attemptlogin">Login</button>
-            <button type="submit" class="btn btn-secondary" name="newuser">Create Account</button>
-        </form>
+            <button type="submit" class="btn btn-primary" onclick="attemptLogin();">Login</button>
+            <button role="button" class="btn btn-secondary" data-toggle="modal" data-target=".bd-example-modal-lg">Create Account</button>
+        </div>
     </header>
 
     <div class="jumbotron">
-        <h1 class="display-3">Hello, world!</h1>
-        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+        <h1 class="display-3">CS 4241 Final Project</h1>
+        <p class="lead">This site is a functional web application for trading DIY craft items.</p>
         <hr class="my-2">
-        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+        <p>For the graders, to enter the site, use the username <strong>grader</strong> and password <strong>grader</strong>.</p>
         <p class="lead">
-            <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+            <a class="btn btn-primary btn-lg" href="README.md" role="button">README.md</a>
         </p>
     </div>
 
@@ -48,13 +47,11 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-block">
-                    <h4 class="card-title">Card title</h4>
-                    <h6 class="card-subtitle text-muted">Support card subtitle</h6>
+                    <h4 class="card-title">Tanuj Sane</h4>
+                    <h6 class="card-subtitle text-muted">Web Developer</h6>
                 </div>
                 <div class="card-block">
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
+                    <p class="card-text">Something goes here</p>
                 </div>
             </div>
         </div>
@@ -62,13 +59,11 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-block">
-                    <h4 class="card-title">Card title</h4>
-                    <h6 class="card-subtitle text-muted">Support card subtitle</h6>
+                    <h4 class="card-title">Matthew Piazza</h4>
+                    <h6 class="card-subtitle text-muted">Web Developer</h6>
                 </div>
                 <div class="card-block">
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
+                    <p class="card-text">Something goes here</p>
                 </div>
             </div>
         </div>
@@ -76,39 +71,117 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-block">
-                    <h4 class="card-title">Card title</h4>
-                    <h6 class="card-subtitle text-muted">Support card subtitle</h6>
+                    <h4 class="card-title">Nikhil Castelino</h4>
+                    <h6 class="card-subtitle text-muted">Web Developer</h6>
                 </div>
                 <div class="card-block">
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
+                    <p class="card-text">Something goes here</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="footer bg-faded">
-        <span class="navbar-text text-muted float-xs-left">CS 4241 Final Project: Tanuj Sane, Matthew Piazza, Nikhil Castelino</span>
-    </footer>
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-faded">
+                    <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                        <span aria-hidden="true" class="text-primary">&times;</span>
+                    </button>
+                    Welcome to IMadeThis!
+                </div>
+                <div class="modal-body">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label for="modalusername">Username</label>
+                            <input type="email" class="form-control" id="modalusername">
+                        </div>
+                        <div class="form-group">
+                            <label for="modalpassword">Password</label>
+                            <input type="text" class="form-control" id="modalpassword">
+                        </div>
+                        <hr>
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <label for="firstname">First Name</label>
+                                <input type="email" class="form-control" id="firstname">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastname">Last Name</label>
+                                <input type="text" class="form-control" id="lastname">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label for="phonenumber">Phone Number</label>
+                            <input type="tel" class="form-control" id="phonenumber">
+                        </div>
+                    </div>
+                    <div class="form-inline" style="margin-top:1%;">
+                        <div class="form-group">
+                            <label for="addr">Address</label>
+                            <input type="text" class="form-control" id="addr">
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" class="form-control" id="city">
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <input type="text" class="form-control" id="city">
+                        </div>
+                        <div class="form-group">
+                            <label for="zipcode">Zip Code</label>
+                            <input type="text" class="form-control" id="zipcode">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" onclick="createAccount();">Create Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         function attemptLogin() {
-            var username = document.getElementById('username').value;
-            var password = document.getElementById('password').value;
+            var username = document.getElementById('username');
+            var password = document.getElementById('password');
+            var rememberme = document.getElementById('rememberme');
 
-            console.log(username);
-            console.log(password);
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/login');
-            xhr.send();
+            var ajax = new XMLHttpRequest();
+            ajax.onload = function () {
+                switch(this.responseText) {
+                case 'username-invalid':
+                    username.parentElement.setAttribute('class', 'form-group has-danger');
+                    break;
+                case 'password-invalid':
+                    password.parentElement.setAttribute('class', 'form-group has-danger');
+                    break;
+                default:
+                    if(rememberme.checked === 'true') {
+                        window.localStorage.setItem('account', JSON.stringify({
+                            u: username.value,
+                            p: password.value
+                        }));
+                    }
+                }
+            }
+            ajax.open('POST', '/login');
+            ajax.send('username=' + username.value + '&password=' + password.value);
+            console.log('username=' + username.value + '&password=' + password.value);
         }
+
+        document.getElementById('modal').addEventListener('focus', (event) => {
+            document.getElementById('modalusername').value = document.getElementById('username').value;
+            document.getElementById('modalpassword').value = document.getElementById('password').value;
+        });
     </script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js" integrity="sha384-XTs3FgkjiBgo8qjEjBk0tGmf3wPrWtA6coPfQDfFEY8AnYJwjalXCiosYRBIBZX8" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js " integrity="sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7 " crossorigin="anonymous "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js " integrity="sha384-XTs3FgkjiBgo8qjEjBk0tGmf3wPrWtA6coPfQDfFEY8AnYJwjalXCiosYRBIBZX8 " crossorigin="anonymous "></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js " integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK " crossorigin="anonymous "></script>
 </body>
 
 </html>
