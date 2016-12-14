@@ -34,25 +34,13 @@ app.post('/login', function (req, res) {
             d += data;
         });
         req.on('end', () => {
-            console.log(d);
             var q = qs.parse(d);
 
-            var user = q.username;
-            var pw = q.password;
-
-            console.log(q, user, pw);
-
-            db.get('SELECT * FROM users WHERE username="' + user + '" AND password="' + pw + '"', function (err, row) {
+            db.get('SELECT * FROM users WHERE username="' + q.username + '" AND password="' + q.password + '"', function (err, row) {
                 if(err) console.log(err);
-                else {
-                    console.log(row);
-                    if(!row) res.end('username-invalid');
-                    else if(!(pw === q.password)) res.end('password-invalid');
-                    else if(user = q.username && pw = q.password) res.end('login-success');
-                    else;
-                }
+                else if(!row) res.end('login-fail');
+                else res.end('login-success');
             });
-
         });
     }
 });

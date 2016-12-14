@@ -152,14 +152,13 @@
 
             var ajax = new XMLHttpRequest();
             ajax.onload = function () {
+                console.log(this.responseText);
                 switch(this.responseText) {
-                case 'username-invalid':
+                case 'login-fail':
                     username.parentElement.setAttribute('class', 'form-group has-danger');
-                    break;
-                case 'password-invalid':
                     password.parentElement.setAttribute('class', 'form-group has-danger');
                     break;
-                case 'success':
+                case 'login-success':
                     window.sessionStorage.setItem('account', JSON.stringify({
                         u: username.value,
                         p: password.value
@@ -170,6 +169,7 @@
                             p: password.value
                         }));
                     }
+                    window.location = 'main.html';
                 }
             }
             ajax.open('POST', '/login');
