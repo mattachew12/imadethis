@@ -20,12 +20,6 @@ app.use(express.static('public', {
     "index": "main.html"
 }));
 
-// handle 404 error with simple page bringing them back to home page
-// (ALWAYS Keep this as the last route to handle all unhandled cases)
-app.get('*', function (req, res) {
-    res.redirect('404.html');
-});
-
 app.post('/login', function (req, res) {
     console.log('req.url', req.url);
     if(req.headers.cookie);
@@ -53,6 +47,12 @@ app.post('/login', function (req, res) {
 
         });
     }
+});
+
+// handle 404 error with simple page bringing them back to home page
+// (ALWAYS Keep this as the last route to handle all unhandled cases)
+app.get('*', function (req, res) {
+    res.redirect('404.html');
 });
 
 // listen on port
