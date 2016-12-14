@@ -97,7 +97,7 @@
 
     <script>
         window.onload = function () {
-            if(!window.localStorage.removeItem('account')) window.location = 'login.html';
+            if(!window.localStorage.getItem('account')) window.location = 'login.html';
         }
 
         function performLogout() {
