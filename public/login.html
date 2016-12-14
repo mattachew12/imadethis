@@ -176,7 +176,8 @@
             ajax.send('username=' + username.value + '&password=' + password.value);
             console.log('username=' + username.value + '&password=' + password.value);
         }
-
+    
+        // populates register account form with username and password
         document.getElementById('modal').addEventListener('focus', (event) => {
             document.getElementById('modalusername').value = document.getElementById('username').value;
             document.getElementById('modalpassword').value = document.getElementById('password').value;

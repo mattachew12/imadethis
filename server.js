@@ -11,6 +11,7 @@ var app = express();
 // initialize database
 var nextNewItemID = 1;
 var nextNewTradeID = 1;
+var categories = ["fantasy", "sci-fi", "craft", "practical", "misc"]
 var db = new sql.Database('private/imadethisDB.sqlite');
 createDatabaseTables(db);
 getSerialIDs(); // no conflict running in parallel with createDatabaseTables
@@ -19,12 +20,6 @@ getSerialIDs(); // no conflict running in parallel with createDatabaseTables
 app.use(express.static('public', {
     "index": "main.html"
 }));
-
-// handle 404 error with simple page bringing them back to home page
-// (ALWAYS Keep this as the last route to handle all unhandled cases)
-app.get('*', function (req, res) {
-    res.redirect('404.html');
-});
 
 app.post('/login', function (req, res) {
     if(req.headers.cookie);
@@ -38,11 +33,18 @@ app.post('/login', function (req, res) {
 
             db.get('SELECT * FROM users WHERE username="' + q.username + '" AND password="' + q.password + '"', function (err, row) {
                 if(err) console.log(err);
+
                 else if(!row) res.end('login-fail');
                 else res.end('login-success');
             });
         });
     }
+});
+
+// handle 404 error with simple page bringing them back to home page
+// (ALWAYS Keep this as the last route to handle all unhandled cases)
+app.get('*', function (req, res) {
+    res.redirect('404.html');
 });
 
 // listen on port
@@ -72,6 +74,7 @@ function createDatabaseTables(db) {
     itemsCreateString = itemsCreateString + "itemID INTEGER PRIMARY KEY,";
     itemsCreateString = itemsCreateString + "username VARCHAR(35) NOT NULL REFERENCES users(username) ON DELETE CASCADE,";
     itemsCreateString = itemsCreateString + "name VARCHAR(35) NOT NULL,";
+    itemsCreateString = itemsCreateString + "category VARCHAR(35) NOT NULL,";
     itemsCreateString = itemsCreateString + "description VARCHAR(500),";
     itemsCreateString = itemsCreateString + "mainImage VARCHAR(35) NOT NULL" + ");";
 
@@ -125,14 +128,14 @@ function getSerialIDs() {
 //       database access functions
 //////////////////////////////////////////////////////
 
-function getUserItems(user, pw) {
+function getUserItems(user, pw, callback) {
     validateUser(user, pw, function (valid) {
         if(valid) { // authentication succeeded
-            var query = 'SELECT name, description, mainImage FROM items WHERE username="' + user + '"';
+            var query = 'SELECT * FROM items WHERE username="' + user + '"';
             db.all(query, function (err, rows) {
                 if(err) console.log(err); // handle error
                 else if(rows) {
-                    console.log(rows); // use queried items
+                    callback(rows); // use queried items
                 }
                 else {
                     console.log("no such item");
@@ -148,7 +151,7 @@ function getUserItems(user, pw) {
 function getItem(user, pw, itemID) {
     validateUser(user, pw, function (valid) {
         if(valid) {
-            var query = 'SELECT name, description, mainImage FROM items WHERE username="'
+            var query = 'SELECT * FROM items WHERE username="'
             query += user + '" AND itemID=' + itemID;
             db.get(query, function (err, row) {
                 if(err) console.log(err); // handle error
@@ -186,16 +189,20 @@ function getItemImagePaths(user, pw, itemID) {
     });
 }
 
-function addItem(user, pw, name, desc, mainImg, otherImages) {
+function addItem(user, pw, name, desc, category, mainImg, otherImages) {
     validateUser(user, pw, function (valid) {
         if(valid) {
             db.serialize(function () {
+                // check category
+                if(categories.indexOf(category) === -1) category = "misc";
                 // create new item entry
-                db.run('INSERT INTO items VALUES (' + (nextNewItemID++) + ', "' + user + '", "' + name + '", "' + desc + '", "' + mainImg + '")');
+                var insert = 'INSERT INTO items VALUES (' + (nextNewItemID++) + ', "' + user + '", "';
+                insert += name + '", "' + category + '", "' + desc + '", "' + mainImg + '")';
+                db.run(insert);
                 // find new entry's ID and link it to corresponding image filepaths
                 // nextNewItemID can't be used further because of shared data issues
                 var query = 'SELECT itemID FROM items WHERE username="' + user + '" AND name="' + name + '"';
-                query += ' AND description="' + desc + '" AND mainImage="' + mainImg;
+                query += ' AND description="' + desc + ' AND category="' + category + '" AND mainImage="' + mainImg;
                 db.each(query, function (err, row) {
                     db.run('INSERT INTO itemImages VALUES ("' + row.itemID + '", "' + mainImg + '")');
                     var index;
@@ -335,10 +342,10 @@ function acceptTrade(user, pw, tradeID) {
                     db.run('UPDATE trades SET pending=0 WHERE tradeID=' + tradeID); // trade complete
                     // swap owner of all items within the trade
                     db.each("SELECT itemID, username FROM tradeItems NATURAL JOIN items WHERE tradeID=" + tradeID, function (err, row2) {
-                        if(row2.username == user) {
+                        if(row2.username === user) {
                             db.run('UPDATE items SET username="' + row.client + '" WHERE itemID=' + row2.itemID);
                         }
-                        else if(row2.username == row.client) {
+                        else if(row2.username === row.client) {
                             db.run('UPDATE items SET username="' + user + '" WHERE itemID=' + row2.itemID);
                         }
                         else {
@@ -381,7 +388,7 @@ function sendFile(res, filename, contentType) {
         res.writeHead(200, {
             'Content-type': contentType
         })
-        if(contentType == 'text/html') {
+        if(contentType === 'text/html') {
             res.end(content, 'utf-8')
         }
         else {
