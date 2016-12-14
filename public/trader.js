@@ -16,36 +16,51 @@ window.onload = function () {
 }
 
 function populatePossTradeItems() {
-    var account = window.sessionStorage.getItem('account');
+    var account = JSON.parse(window.sessionStorage.getItem('account'));
     var vendorName = window.sessionStorage.getItem('vendorName');
     document.getElementById("vendorHeader").innerText = vendorName + "'s Portfolio";
     
     var ajax = new XMLHttpRequest();
     ajax.onload = function () {
         var response = JSON.parse(this.responseText);
-        
-        case 'username-invalid':
-            username.parentElement.setAttribute('class', 'form-group has-danger');
-            break;
-        case 'password-invalid':
-            password.parentElement.setAttribute('class', 'form-group has-danger');
-            break;
-        case 'success':
-            window.sessionStorage.setItem('account', JSON.stringify({
-                u: username.value,
-                p: password.value
-            }));
-            if(rememberme.checked === 'true') {
-                window.localStorage.setItem('account', JSON.stringify({
-                    u: username.value,
-                    p: password.value
-                }));
-            }
+        console.log(response[0]);
+        console.log(response[1]);
+        elMyItems = document.getElementById("myItems");
+        elVendorItems = document.getElementById("vendorItems");
+        elMyItems.innerHTML = "";
+        elVendorItems.innerHTML = "";
+        var index = 0;
+        for (index = 0; index < response.clientItems.length; index++){
+            item = '<div class="card">';
+            item += '<div class="card-block">'
+            item += '<h4 class="card-title">Card title</h4>'
+            item += '<h6 class="card-subtitle text-muted">Support card subtitle</h6>'
+            item += '</div>'
+            item += '<img src="..." alt="Card image">'
+            item += '<div class="card-block">'
+            item += '<p class="card-text">Some quick example text to build on the card title</p>'
+            item += '</div>'
+            item += '</div>'
+            elMyItems.innerHTML += item;
         }
+        for (index = 0; index < response.vendorItems.length; index++){
+            item = '<div class="card">';
+            item += '<div class="card-block">'
+            item += '<h4 class="card-title">Card title</h4>'
+            item += '<h6 class="card-subtitle text-muted">Support card subtitle</h6>'
+            item += '</div>'
+            item += '<img src="..." alt="Card image">'
+            item += '<div class="card-block">'
+            item += '<p class="card-text">Some quick example text to build on the card title</p>'
+            item += '</div>'
+            item += '</div>'
+            elVendorItems.innerHTML += item;
+        }
+        if (elMyItems.innerHTML === "") elMyItems.innerHTML = "No Items to Trade";
+        if (elVendorItems.innerHTML === "") elVendorItems.innerHTML = "No Items to Trade";        
     }
     ajax.open('POST', '/getPossTradeItems');
-    ajax.send('username=' + account.u + '&password=' + account.p + '&other=' + vendorName);
-    console.log('username=' + username.value + '&password=' + password.value);    
+    ajax.send('username=' + account.u + '&password=' + account.p + '&other=' + vendorName);   
 }
 
 populatePossTradeItems()

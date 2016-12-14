@@ -1,11 +1,26 @@
-var express = require('express'),
-    path = require('path'),
-    fs = require('fs'),
-    url = require('url'),
-    qs = require('querystring'),
-    sql = require('sqlite3'),
-    port = process.env.PORT || 8080;
+/* 
+ * server.js
+ * All code necessary for creating the back-end of IMadeThis.com
+ *
+ * Authors:
+ * - Tanuj Sane
+ * - Nikhil Castelino
+ * - Matthew Piazza
+ */
+ 
+//////////////////////////////////////////////////////
+//       initialization
+//////////////////////////////////////////////////////
 
+// get necessary modules
+var express = require('express');
+var path = require('path');
+var fs = require('fs');
+var qs = require('querystring');
+var sql = require('sqlite3');
+
+// initialize server variables
+var port = process.env.PORT || 8080;
 var app = express();
 
 // initialize database
@@ -15,6 +30,10 @@ var categories = ["fantasy", "sci-fi", "craft", "practical", "misc"]
 var db = new sql.Database('private/imadethisDB.sqlite');
 createDatabaseTables(db);
 getSerialIDs(); // no conflict running in parallel with createDatabaseTables
+
+//////////////////////////////////////////////////////
+//       POST/GET requests
+//////////////////////////////////////////////////////
 
 // serve all files in public directory
 app.use(express.static('public', {
@@ -29,30 +48,34 @@ app.post('/login', function (req, res) {
             d += data;
         });
         req.on('end', () => {
-            console.log(d);
             var q = qs.parse(d);
 
-            var user = q.username;
-            var pw = q.password;
-
-            console.log(q, user, pw);
-
-            db.get('SELECT * FROM users WHERE username="' + user + '" AND password="' + pw + '"', function (err, row) {
+            db.get('SELECT * FROM users WHERE username="' + q.username + '" AND password="' + q.password + '"', function (err, row) {
                 if(err) console.log(err);
-                else {
-                    console.log(row);
-                    if(!row) res.end('username-invalid');
-                    else if(!(pw === q.password)) res.end('password-invalid');
-                    else if (user === q.username && pw === q.password) {
-                        console.log("here");
-                        res.end('success');
-                    }                    
-                    else;
-                }
-            });
 
+                else if(!row) res.end('login-fail');
+                else res.end('login-success');
+            });
         });
     }
+});
+
+app.post('/getPossTradeItems', function (req, res) {
+    var d = '';
+    req.on('data', (data) => {
+        d += data;
+    });
+    req.on('end', () => {
+        var q = qs.parse(d);
+        getUserItems(q.username, q.password, q.username, (clientRows) =>  {
+            getUserItems(q.username, q.password, q.other, (vendorRows) =>  {
+                res.send(JSON.stringify({
+                    clientItems: clientRows,
+                    vendorItems: vendorRows
+                }));
+            });
+        });
+    });
 });
 
 // handle 404 error with simple page bringing them back to home page
@@ -142,22 +165,18 @@ function getSerialIDs() {
 //       database access functions
 //////////////////////////////////////////////////////
 
-function getUserItems(user, pw, callback) {
+function getUserItems(user, pw, itemUser, callback) {
     validateUser(user, pw, function (valid) {
         if(valid) { // authentication succeeded
-            var query = 'SELECT * FROM items WHERE username="' + user + '"';
+            var query = 'SELECT * FROM items WHERE username="' + itemUser + '"';
             db.all(query, function (err, rows) {
                 if(err) console.log(err); // handle error
-                else if(rows) {
-                    callback(rows); // use queried items
-                }
-                else {
-                    console.log("no such item");
-                }
+                callback(rows); // use queried items
             });
         }
         else { // no authentication            
-            console.log("invalid authentication");
+            console.log("invalid authentication: "+user+" | "+pw);
+            callback("invalid auth");
         }
     });
 }
@@ -165,8 +184,7 @@ function getUserItems(user, pw, callback) {
 function getItem(user, pw, itemID) {
     validateUser(user, pw, function (valid) {
         if(valid) {
-            var query = 'SELECT * FROM items WHERE username="'
-            query += user + '" AND itemID=' + itemID;
+            var query = 'SELECT * FROM items WHERE itemID=' + itemID;
             db.get(query, function (err, row) {
                 if(err) console.log(err); // handle error
                 else if(row) {
@@ -206,9 +224,9 @@ function getItemImagePaths(user, pw, itemID) {
 function addItem(user, pw, name, desc, category, mainImg, otherImages) {
     validateUser(user, pw, function (valid) {
         if(valid) {
-            db.serialize(function () {  
+            db.serialize(function () {
                 // check category
-                if (categories.indexOf(category) === -1) category = "misc";
+                if(categories.indexOf(category) === -1) category = "misc";
                 // create new item entry
                 var insert = 'INSERT INTO items VALUES (' + (nextNewItemID++) + ', "' + user + '", "';
                 insert += name + '", "' + category + '", "' + desc + '", "' + mainImg + '")';
