@@ -31,6 +31,7 @@
             </div>
         </div>
     </header>
+    <a href="trader.html" onclick="saveVendor()">Trader</a>
 
     <div class="container-fluid" id="workspace" style="margin-top:1%;">
         <form id="searcher" class="form-inline col-md-12" style="margin-bottom: 2%; display: none;">
@@ -96,8 +97,12 @@
     </div>
 
     <script>
+        function saveVendor (){
+            window.sessionStorage.setItem('vendorName', 'kiliman');
+        }
+    
         window.onload = function () {
-            if(!window.localStorage.getItem('account')) window.location = 'login.html';
+            if(!window.sessionStorage.getItem('account')) window.location = 'login.html';
         }
 
         function performLogout() {

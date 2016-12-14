@@ -1,5 +1,5 @@
 /* 
- * client.js
+ * trader.js
  * Function definitions for client-side code
  *
  * Authors:
@@ -11,14 +11,19 @@
  * <script src="trader.js"></script>
  */
  
- function populateTrades() {
-    var username = document.getElementById('username');
-    var password = document.getElementById('password');
-    var rememberme = document.getElementById('rememberme');
+window.onload = function () {
+    if(!window.sessionStorage.getItem('account')) window.location = 'login.html';    
+}
 
+function populatePossTradeItems() {
+    var account = window.sessionStorage.getItem('account');
+    var vendorName = window.sessionStorage.getItem('vendorName');
+    document.getElementById("vendorHeader").innerText = vendorName + "'s Portfolio";
+    
     var ajax = new XMLHttpRequest();
     ajax.onload = function () {
-        switch(this.responseText) {
+        var response = JSON.parse(this.responseText);
+        
         case 'username-invalid':
             username.parentElement.setAttribute('class', 'form-group has-danger');
             break;
@@ -38,10 +43,9 @@
             }
         }
     }
-    ajax.open('POST', '/login');
-    ajax.send('username=' + username.value + '&password=' + password.value);
-    console.log('username=' + username.value + '&password=' + password.value);
+    ajax.open('POST', '/getPossTradeItems');
+    ajax.send('username=' + account.u + '&password=' + account.p + '&other=' + vendorName);
+    console.log('username=' + username.value + '&password=' + password.value);    
 }
 
-populateUserItems()
-populateOtherItems()
+populatePossTradeItems()
