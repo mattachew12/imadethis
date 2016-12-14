@@ -21,10 +21,9 @@ app.use(express.static('public', {
 }));
 
 app.post('/login', function (req, res) {
-    console.log('req.url', req.url);
     if(req.headers.cookie);
     else {
-        var d;
+        var d = '';
         req.on('data', (data) => {
             d += data;
         });
@@ -42,6 +41,9 @@ app.post('/login', function (req, res) {
                 else {
                     console.log(row);
                     if(!row) res.end('username-invalid');
+                    else if(!(pw === q.password)) res.end('password-invalid');
+                    else if(user = q.username && pw = q.password) res.end('login-success');
+                    else;
                 }
             });
 
