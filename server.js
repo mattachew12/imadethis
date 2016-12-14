@@ -18,10 +18,12 @@ var path = require('path');
 var fs = require('fs');
 var qs = require('querystring');
 var sql = require('sqlite3');
+var cookieParser = require('cookie-parser');
 
 // initialize server variables
 var port = process.env.PORT || 8080;
 var app = express();
+app.use(cookieParser());
 
 // initialize database
 var nextNewItemID = 1;
@@ -35,29 +37,43 @@ getSerialIDs(); // no conflict running in parallel with createDatabaseTables
 //       POST/GET requests
 //////////////////////////////////////////////////////
 
-// serve all files in public directory
-app.use(express.static('public', {
-    "index": "main.html"
-}));
+app.get('/', function (req, res) {res.redirect('main.html')});
+
+// check permissions through cookies before loading the page
+app.get(['/main.html', '/', '/trader.html', '/*.js'], function (req, res) { 
+    db.get('SELECT * FROM users WHERE username="' + req.cookies.user + '" AND password="' + req.cookies.password + '"', function (err, row) {
+        if (!row) res.redirect('login.html');
+        else res.sendFile(req.path, {root: __dirname + '/public/'});
+    });    
+});
+
+// auto-login with cookies
+app.get(['/login.html'], function (req, res) { 
+    db.get('SELECT * FROM users WHERE username="' + req.cookies.user + '" AND password="' + req.cookies.password + '"', function (err, row) {
+        if (row) res.redirect('main.html');
+        else res.sendFile(req.path, {root: __dirname + '/public/'});
+    });   
+});
 
 app.post('/login', function (req, res) {
-    if(req.headers.cookie);
-    else {
-        var d = '';
-        req.on('data', (data) => {
-            d += data;
-        });
-        req.on('end', () => {
-            var q = qs.parse(d);
+    var d = '';
+    req.on('data', (data) => {
+        d += data;
+    });
+    req.on('end', () => {
+        var q = qs.parse(d);
 
-            db.get('SELECT * FROM users WHERE username="' + q.username + '" AND password="' + q.password + '"', function (err, row) {
-                if(err) console.log(err);
+        db.get('SELECT * FROM users WHERE username="' + q.username + '" AND password="' + q.password + '"', function (err, row) {
+            if(err) console.log(err);
 
-                else if(!row) res.end('login-fail');
-                else res.end('login-success');
-            });
+            else if(!row) res.end('login-fail');
+            else {
+                res.cookie('user', q.username, { maxAge: 7200000});
+                res.cookie('password', q.password, { maxAge: 7200000});
+                res.end('login-success');
+            }
         });
-    }
+    });
 });
 
 app.post('/getPossTradeItems', function (req, res) {
@@ -77,6 +93,11 @@ app.post('/getPossTradeItems', function (req, res) {
         });
     });
 });
+
+// serve all unhandled files in public directory
+app.use(express.static('public', {
+    "index": "main.html"
+}));
 
 // handle 404 error with simple page bringing them back to home page
 // (ALWAYS Keep this as the last route to handle all unhandled cases)
