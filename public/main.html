@@ -32,7 +32,7 @@
         </div>
     </header>
     <div class="container-fluid" id="workspace" style="margin-top:1%;">
-        <div class="form-inline col-md-12 profile-browse" style="margin-bottom: 2%;">
+        <div class="form-inline col-md-12 hideable browse" style="margin-bottom: 2%;">
             <input type="text" class="form-control" id="searchbar" placeholder="Search" style="width: 50%;">
             <select class="btn btn-secondary" id="cat">
                 <option selected>Select a Category</option>
@@ -45,7 +45,24 @@
             </select>
             <button type="submit" class="btn btn-primary" onclick="search();">Search</button>
         </div>
-        <div id="browseItems"></div>
+        <div class="hideable browse" id="browseItems"></div>
+        <div class="hideable inbox col-md-3" style="display:none;">
+            <div class="card card-block">
+                <h4 class="card-title">[Name 1]</h4>
+                <h6 class="card-subtitle text-muted">[Message Snippet]</h6>
+            </div>
+            <div class="card card-block">
+                <h4 class="card-title">[Name 2]</h4>
+                <h6 class="card-subtitle text-muted">[Message Snippet]</h6>
+            </div>
+            <div class="card card-block">
+                <h4 class="card-title">[Name 3]</h4>
+                <h6 class="card-subtitle text-muted">[Message Snippet]</h6>
+            </div>
+        </div>
+        <div class="hideable inbox col-md-9" style="display:none;">
+            MESSAGEVIEW
+        </div>
     </div>
 
     <script src="js/navbar.js"></script>

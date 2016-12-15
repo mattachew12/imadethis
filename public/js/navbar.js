@@ -11,7 +11,7 @@
  * <script src="navbar.js"></script>
  */
 
-var account = JSON.parse(window.localStorage.getItem('account'));
+var account = JSON.parse(window.sessionStorage.getItem('account'));
 
 function performLogout() {
     document.cookie = 'user=; expires=Thu, 01-Jan-1970 00:00:01 GMT;';
@@ -21,6 +21,6 @@ function performLogout() {
     window.location = 'login.html';
 }
 
-function navClick(action) {
-    console.log(action);
+function navClick(id) {
+    console.log(id);
 }

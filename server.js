@@ -53,16 +53,6 @@ app.get(['/main.html', '/trader.html', '/portfolio.html', '/item.html'], functio
     });
 });
 
-// auto-login with cookies
-app.get(['/login.html'], function (req, res) {
-    db.get('SELECT * FROM users WHERE username="' + req.cookies.user + '" AND password="' + req.cookies.password + '"', function (err, row) {
-        if(row) res.redirect('main.html');
-        else res.sendFile(req.path, {
-            root: __dirname + '/public/'
-        });
-    });
-});
-
 app.post('/login', function (req, res) {
     var d = '';
     req.on('data', (data) => {
@@ -344,7 +334,7 @@ function addItem(user, pw, name, desc, category, mainImg, otherImages, callback)
                 // find new entry's ID and link it to corresponding image filepaths
                 // nextNewItemID can't be used further because of shared data issues
                 var query = 'SELECT itemID FROM items WHERE username="' + user + '" AND name="' + name + '"';
-                query += ' AND description="' + desc + '" AND category="' + category + '" AND mainImage="' + mainImg + '"';                
+                query += ' AND description="' + desc + '" AND category="' + category + '" AND mainImage="' + mainImg + '"';
                 db.each(query, function (err, row) {
                     db.run('INSERT INTO itemImages VALUES ("' + mainImg + '", "' + row.itemID + '")');
                     var index;

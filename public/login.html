@@ -151,7 +151,7 @@
             var rememberme = document.getElementById('rememberme');
 
             var ajax = new XMLHttpRequest();
-            ajax.onload = function () {                
+            ajax.onload = function () {
                 switch(this.responseText) {
                 case 'login-fail':
                     username.parentElement.setAttribute('class', 'form-group has-danger');

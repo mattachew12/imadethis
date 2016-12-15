@@ -12,20 +12,35 @@
  */
 
 var account;
+var navmenu = {
+    'browse': document.getElementById('browse'),
+    'inbox': document.getElementById('inbox'),
+    'history': document.getElementById('history')
+}
 
 window.onload = function () {
     if(!window.sessionStorage.getItem('account')) window.location = 'login.html';
     account = JSON.parse(window.sessionStorage.getItem('account'));
     document.getElementById('hello-username').innerHTML = 'Hello, ' + account.u;
-    //search();
+    search();
 }
 
 document.getElementById('searchbar').addEventListener('input', (event) => {
     search();
 });
 
-function navClick(action) {
-    console.log(action);
+function navClick(id) {
+    console.log(id);
+    for(var key of Object.keys(navmenu)) {
+        if(key === id) navmenu[key].className += ' active';
+        else navmenu[key].className = 'nav-item nav-link';
+    }
+    var hideables = document.getElementsByClassName('hideable');
+    for(var i = 0; i < hideables.length; i++) {
+        if(hideables[i].className.includes(id)) hideables[i].removeAttribute('style');
+        else hideables[i].setAttribute('style', 'display:none;');
+    }
+
 }
 
 function search() {
@@ -49,7 +64,7 @@ function search() {
             item += '<div class="card-block">';
             item += '<p class="card-text">' + response[index].description + '</p>';
             item += '<button class="btn btn-primary">View Item</button>';
-            //TODO item += '<button class="btn btn-secondary">Message Seller</button>';
+            item += '<button class="btn btn-secondary">Message Seller</button>';
             item += '</div>';
             item += '</div>';
             elBrowseItems.innerHTML += item;
