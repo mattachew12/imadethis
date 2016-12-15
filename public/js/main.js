@@ -20,6 +20,10 @@ window.onload = function() {
     search();
 }    
 
+document.getElementById('searchbar').addEventListener('input', (event) => {
+    search();
+});
+
 function navClick(action) {
     console.log(action);
 }
