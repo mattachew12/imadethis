@@ -55,14 +55,16 @@ function addNewItem() {
     var desc = document.getElementById("desc").value;
     var mainFile = document.getElementById("upload-main").value.split("\\").pop(); // extract only the name
     var sendString = 'username=' + account.u + '&password=' + account.p + '&name=' + name;
-    sendString += '&cat=' + cat + '&desc=' + desc + '&main=' + mainFile;
-    ajax.onload = function(){
-        console.log(this.responseText);
-        resetForm();
-        getMyItems();        
-    }
-    ajax.open('POST', '/addNewItem');    
-    ajax.send(sendString);   
+    if (name && cat && desc && mainFile){
+        sendString += '&cat=' + cat + '&desc=' + desc + '&main=' + mainFile;
+        ajax.onload = function(){
+            console.log(this.responseText);
+            resetForm();
+            getMyItems();        
+        }
+        ajax.open('POST', '/addNewItem');    
+        ajax.send(sendString);   
+    } else alert("Not all fields filled in");
 }
 
 function resetForm() {

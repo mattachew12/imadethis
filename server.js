@@ -334,12 +334,12 @@ function addItem(user, pw, name, desc, category, mainImg, otherImages, callback)
                 // find new entry's ID and link it to corresponding image filepaths
                 // nextNewItemID can't be used further because of shared data issues
                 var query = 'SELECT itemID FROM items WHERE username="' + user + '" AND name="' + name + '"';
-                query += ' AND description="' + desc + ' AND category="' + category + '" AND mainImage="' + mainImg;
+                query += ' AND description="' + desc + '" AND category="' + category + '" AND mainImage="' + mainImg + '"';                
                 db.each(query, function (err, row) {
-                    db.run('INSERT INTO itemImages VALUES ("' + row.itemID + '", "' + mainImg + '")');
+                    db.run('INSERT INTO itemImages VALUES ("' + mainImg + '", "' + row.itemID + '")');
                     var index;
                     for(index = 0; index < otherImages.length; ++index) {
-                        db.run('INSERT INTO itemImages VALUES ("' + row.itemID + '", "' + otherImages[index] + '")');
+                        db.run('INSERT INTO itemImages VALUES ("' + otherImages[index] + '", "' + row.itemID + '")');
                     }
                 }, function() {
                     callback("success");
