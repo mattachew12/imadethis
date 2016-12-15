@@ -18,3 +18,7 @@ function performLogout() {
     window.localStorage.removeItem('account');
     window.location = 'login.html';
 } 
+
+function navClick(action) {            
+    console.log(action);
+} 

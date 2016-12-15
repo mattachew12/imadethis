@@ -12,7 +12,8 @@
  */
  
 window.onload = function () {
-    if(!window.sessionStorage.getItem('account')) window.location = 'login.html';    
+    if(!window.sessionStorage.getItem('account')) window.location = 'login.html';   
+    populatePossTradeItems();
 }
 
 function populatePossTradeItems() {
@@ -64,5 +65,3 @@ function populatePossTradeItems() {
     ajax.open('POST', '/getPossTradeItems');
     ajax.send('username=' + account.u + '&password=' + account.p + '&other=' + vendorName);   
 }
-
-populatePossTradeItems()

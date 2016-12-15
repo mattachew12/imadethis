@@ -19,6 +19,7 @@ var fs = require('fs');
 var qs = require('querystring');
 var sql = require('sqlite3');
 var cookieParser = require('cookie-parser');
+var formidable = require('formidable');
 
 // initialize server variables
 var port = process.env.PORT || 8080;
@@ -41,7 +42,7 @@ getSerialIDs(); // no conflict running in parallel with createDatabaseTables
 app.get('/', function (req, res) {res.redirect('main.html')});
 
 // check permissions through cookies before loading the page
-app.get(['/main.html', '/trader.html', '/item.html'], function (req, res) { 
+app.get(['/main.html', '/trader.html', '/portfolio.html', '/item.html'], function (req, res) { 
     db.get('SELECT * FROM users WHERE username="' + req.cookies.user + '" AND password="' + req.cookies.password + '"', function (err, row) {
         if (!row) res.redirect('login.html');
         else res.sendFile(req.path, {root: __dirname + '/public/'});
@@ -77,6 +78,32 @@ app.post('/login', function (req, res) {
     });
 });
 
+app.post('/randItemsFromCat', function (req, res) {
+    var d = '';
+    req.on('data', (data) => {
+        d += data;
+    });
+    req.on('end', () => {
+        var q = qs.parse(d);
+        browseCategory(q.username, q.password, q.category, q.search, (randRows) =>  {
+            res.send(JSON.stringify(randRows));
+        });
+    });
+});
+
+app.post('/portfolio', function (req, res) {
+    var d = '';
+    req.on('data', (data) => {
+        d += data;
+    });
+    req.on('end', () => {
+        var q = qs.parse(d);
+        getUserItems(q.username, q.password, q.username, (clientRows) =>  {
+            res.send(JSON.stringify(clientRows));
+        });
+    });
+});
+
 app.post('/getPossTradeItems', function (req, res) {
     var d = '';
     req.on('data', (data) => {
@@ -95,15 +122,34 @@ app.post('/getPossTradeItems', function (req, res) {
     });
 });
 
-app.post('/randItemsFromCat', function (req, res) {
+// TODO save it from renaming old file
+app.post('/upload', function saveUpload(req, res){  
+  var form = new formidable.IncomingForm(); // create an incoming form object
+  form.multiples = true; // specify that we want to allow the user to upload multiple files in a single request
+  form.uploadDir = path.join(__dirname, '/public/img');    
+  form.on('file', function(field, file) { // rename it to it's original name after the temp name is created
+    fs.rename(file.path, path.join(form.uploadDir, file.name));
+  });
+
+  // log any errors that occur
+  form.on('error', function(err) {
+    console.log('An error has occured: \n' + err);
+  });
+  form.on('end', function() {
+    res.end('success');
+  }); 
+  form.parse(req); // parse the incoming request containing the form data
+});
+
+app.post('/addNewItem', function (req, res) {
     var d = '';
     req.on('data', (data) => {
         d += data;
     });
     req.on('end', () => {
         var q = qs.parse(d);
-        browseCategory(q.username, q.password, q.category, q.search, (randRows) =>  {
-            res.send(JSON.stringify(randRows));
+        addItem(q.username, q.password, q.name, q.desc, q.cat, q.main, [], (success) =>  {
+            res.send(success);
         });
     });
 });
@@ -275,12 +321,12 @@ function getItemImagePaths(user, pw, itemID) {
     });
 }
 
-function addItem(user, pw, name, desc, category, mainImg, otherImages) {
+function addItem(user, pw, name, desc, category, mainImg, otherImages, callback) {
     validateUser(user, pw, function (valid) {
         if(valid) {
             db.serialize(function () {
                 // check category
-                if(categories.indexOf(category) === -1) category = "misc";
+                if(categories.indexOf(category) < 0) category = "misc";
                 // create new item entry
                 var insert = 'INSERT INTO items VALUES (' + (nextNewItemID++) + ', "' + user + '", "';
                 insert += name + '", "' + category + '", "' + desc + '", "' + mainImg + '")';
@@ -295,11 +341,14 @@ function addItem(user, pw, name, desc, category, mainImg, otherImages) {
                     for(index = 0; index < otherImages.length; ++index) {
                         db.run('INSERT INTO itemImages VALUES ("' + row.itemID + '", "' + otherImages[index] + '")');
                     }
+                }, function() {
+                    callback("success");
                 });
             });
         }
         else { // no authentication         
             console.log("invalid authentication");
+            callback("invalid auth");
         }
     });
 }
