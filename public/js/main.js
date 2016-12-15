@@ -31,7 +31,6 @@ function search() {
     var ajax = new XMLHttpRequest();
     ajax.onload = function () {
         var response = JSON.parse(this.responseText);
-        console.log(response);
         elBrowseItems = document.getElementById("browseItems");
         elBrowseItems.innerHTML = "";        
         var index = 0;

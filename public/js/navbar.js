@@ -21,6 +21,6 @@ function performLogout() {
     window.location = 'login.html';
 }
 
-function navClick(id) {
-
+function navClick(action) {
+    console.log(action);
 }
