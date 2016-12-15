@@ -28,7 +28,7 @@ app.use(cookieParser());
 // initialize database
 var nextNewItemID = 1;
 var nextNewTradeID = 1;
-var categories = ["fantasy", "sci-fi", "craft", "practical", "misc"]
+var categories = ["fantasy", "sci-fi", "craft", "practical", "misc"];
 var db = new sql.Database('private/imadethisDB.sqlite');
 createDatabaseTables(db);
 getSerialIDs(); // no conflict running in parallel with createDatabaseTables
@@ -40,7 +40,7 @@ getSerialIDs(); // no conflict running in parallel with createDatabaseTables
 app.get('/', function (req, res) {res.redirect('main.html')});
 
 // check permissions through cookies before loading the page
-app.get(['/main.html', '/', '/trader.html', '/*.js'], function (req, res) { 
+app.get(['/main.html', '/trader.html', '/item.html'], function (req, res) { 
     db.get('SELECT * FROM users WHERE username="' + req.cookies.user + '" AND password="' + req.cookies.password + '"', function (err, row) {
         if (!row) res.redirect('login.html');
         else res.sendFile(req.path, {root: __dirname + '/public/'});
