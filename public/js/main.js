@@ -24,6 +24,10 @@ document.getElementById('searchbar').addEventListener('input', (event) => {
     search();
 });
 
+document.getElementById('cat').addEventListener('input', (event) => {
+    search();
+});
+
 function navClick(action) {
     console.log(action);
 }
