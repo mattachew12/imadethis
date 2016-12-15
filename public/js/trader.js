@@ -24,39 +24,39 @@ function populatePossTradeItems() {
     var ajax = new XMLHttpRequest();
     ajax.onload = function () {
         var response = JSON.parse(this.responseText);
-        console.log(response[0]);
-        console.log(response[1]);
         elMyItems = document.getElementById("myItems");
         elVendorItems = document.getElementById("vendorItems");
         elMyItems.innerHTML = "";
         elVendorItems.innerHTML = "";
         var index = 0;
-        for (index = 0; index < response.clientItems.length; index++){
-            console.log(response.clientItems[index]);
+        for (index = 0; index < response.clientItems.length; index++){            
             item = '<div class="card">';
-            item += '<div class="card-block">'
-            item += '<h4 class="card-title">Card title</h4>'
-            item += '<h6 class="card-subtitle text-muted">Support card subtitle</h6>'
-            item += '</div>'
-            item += '<img src="..." alt="Card image">'
-            item += '<div class="card-block">'
-            item += '<p class="card-text">Some quick example text to build on the card title</p>'
-            item += '</div>'
-            item += '</div>'
+            item += '<div class="card-block">';
+            item += '<h4 class="card-title">'+response.clientItems[index].name+'</h4>';
+            item += '<h6 class="card-subtitle text-muted">'+response.clientItems[index].username+'</h6>';
+            item += '</div>';
+            item += '<img class="col-md-12" src="/img/'+response.clientItems[index].mainImage+'" alt="'+response.clientItems[index].mainImage+'">';
+            item += '<div class="card-block">';
+            item += '<p class="card-text">'+response.clientItems[index].description+'</p>';
+            item += '<button class="btn btn-primary" onclick="tradeItem('+response.clientItems[index].itemID+');">Add to trade</button>';            
+            item += '<button class="btn btn-secondary" onclick="viewItem('+response.clientItems[index].itemID+');">View item</button>';
+            item += '</div>';
+            item += '</div>';
             elMyItems.innerHTML += item;
         }
-        for (index = 0; index < response.vendorItems.length; index++){
-            console.log(response.vendorItems[index]);
+        for (index = 0; index < response.vendorItems.length; index++){            
             item = '<div class="card">';
-            item += '<div class="card-block">'
-            item += '<h4 class="card-title">Card title</h4>'
-            item += '<h6 class="card-subtitle text-muted">Support card subtitle</h6>'
-            item += '</div>'
-            item += '<img src="..." alt="Card image">'
-            item += '<div class="card-block">'
-            item += '<p class="card-text">Some quick example text to build on the card title</p>'
-            item += '</div>'
-            item += '</div>'
+            item += '<div class="card-block">';
+            item += '<h4 class="card-title">'+response.vendorItems[index].name+'</h4>';
+            item += '<h6 class="card-subtitle text-muted">'+response.vendorItems[index].username+'</h6>';
+            item += '</div>';
+            item += '<img class="col-md-12" src="/img/'+response.vendorItems[index].mainImage+'" alt="'+response.vendorItems[index].mainImage+'">';
+            item += '<div class="card-block">';
+            item += '<p class="card-text">'+response.vendorItems[index].description+'</p>';
+            item += '<button class="btn btn-primary" onclick="tradeItem('+response.vendorItems[index].itemID+');">Add to trade</button>';            
+            item += '<button class="btn btn-secondary" onclick="viewItem('+response.vendorItems[index].itemID+');">View item</button>';
+            item += '</div>';
+            item += '</div>';
             elVendorItems.innerHTML += item;
         }
         if (elMyItems.innerHTML === "") elMyItems.innerHTML = "No Items to Trade";

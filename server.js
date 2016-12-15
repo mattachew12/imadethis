@@ -148,8 +148,21 @@ app.post('/addNewItem', function (req, res) {
     });
     req.on('end', () => {
         var q = qs.parse(d);
-        addItem(q.username, q.password, q.name, q.desc, q.cat, q.main, [], (success) =>  {
+        addItem(q.username, q.password, q.name, q.desc, q.cat, q.main, [], (success) => {
             res.send(success);
+        });
+    });
+});
+
+app.post('/getItem', function (req, res) {
+    var d = '';
+    req.on('data', (data) => {
+        d += data;
+    });
+    req.on('end', () => {
+        var q = qs.parse(d);
+        getItem(q.username, q.password, q.itemID, (item) => {
+            res.send(JSON.stringify(item));
         });
     });
 });
@@ -193,7 +206,7 @@ function createDatabaseTables(db) {
     itemsCreateString = itemsCreateString + "username VARCHAR(35) NOT NULL REFERENCES users(username) ON DELETE CASCADE,";
     itemsCreateString = itemsCreateString + "name VARCHAR(35) NOT NULL,";
     itemsCreateString = itemsCreateString + "category VARCHAR(35) NOT NULL,";
-    itemsCreateString = itemsCreateString + "description VARCHAR(500),";
+    itemsCreateString = itemsCreateString + "description VARCHAR(500) NOT NULL,";
     itemsCreateString = itemsCreateString + "mainImage VARCHAR(35) NOT NULL" + ");";
 
     var itemImagesCreateString = createString + "itemImages (";
@@ -281,18 +294,13 @@ function getUserItems(user, pw, itemUser, callback) {
     });
 }
 
-function getItem(user, pw, itemID) {
+function getItem(user, pw, itemID, callback) {
     validateUser(user, pw, function (valid) {
         if(valid) {
             var query = 'SELECT * FROM items WHERE itemID=' + itemID;
             db.get(query, function (err, row) {
                 if(err) console.log(err); // handle error
-                else if(row) {
-                    console.log(row); // use queried items
-                }
-                else {
-                    console.log("no such item"); // empty query
-                }
+                callback(row); // use queried items
             });
         }
         else { // no authentication         
