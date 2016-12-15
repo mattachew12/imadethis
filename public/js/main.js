@@ -52,8 +52,8 @@ function search() {
             item += '<img src="/img/'+response[index].mainImage+'" alt="'+response[index].mainImage+'">';
             item += '<div class="card-block">';
             item += '<p class="card-text">'+response[index].description+'</p>';
-            item += '<button class="btn btn-primary">View Item</button>';
-            //TODO item += '<button class="btn btn-secondary">Message Seller</button>';
+            item += '<button class="btn btn-primary" onclick="viewItem('+response[index].itemID+');">View Item</button>';
+            item += '<button class="btn btn-secondary" onclick="proposeTrade('+"'"+response[index].username+"'"+');">Propose Trade</button>';
             item += '</div>';
             item += '</div>';
             elBrowseItems.innerHTML += item;
@@ -62,4 +62,14 @@ function search() {
     }
     ajax.open('POST', '/randItemsFromCat');
     ajax.send('username=' + account.u + '&password=' + account.p + '&category=' + category + '&search=' + searchVal);   
+}
+
+function viewItem(itemID){
+    window.sessionStorage.setItem('itemID', itemID);
+    window.location = "/item.html";
+}
+
+function proposeTrade(vendorName){
+    window.sessionStorage.setItem('vendorName', vendorName);
+    window.location = 'trader.html';
 }

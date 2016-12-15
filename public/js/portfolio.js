@@ -36,8 +36,7 @@ function getMyItems() {
             item += '<img src="/img/'+response[index].mainImage+'" alt="'+response[index].mainImage+'">';
             item += '<div class="card-block">';
             item += '<p class="card-text">'+response[index].description+'</p>';
-            item += '<button class="btn btn-primary">View Item</button>';
-            //TODO item += '<button class="btn btn-secondary">Message Seller</button>';
+            item += '<button class="btn btn-primary">Delete Item</button>'; // TODO
             item += '</div>';
             item += '</div>';
             elMyItems.innerHTML += item;
