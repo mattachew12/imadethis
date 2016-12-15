@@ -29,7 +29,7 @@ app.use(cookieParser());
 // initialize database
 var nextNewItemID = 1;
 var nextNewTradeID = 1;
-var categories = ["fantasy", "sci-fi", "craft", "practical", "misc"];
+var categories = ["fantasy", "sci-fi", "crafts", "practical", "misc"];
 var db = new sql.Database('private/imadethisDB.sqlite');
 createDatabaseTables(db);
 getSerialIDs(); // no conflict running in parallel with createDatabaseTables
@@ -102,7 +102,7 @@ app.post('/randItemsFromCat', function (req, res) {
     });
     req.on('end', () => {
         var q = qs.parse(d);
-        browseCategory(q.username, q.password, q.category, (randRows) =>  {
+        browseCategory(q.username, q.password, q.category, q.search, (randRows) =>  {
             res.send(JSON.stringify(randRows));
         });
     });
@@ -116,7 +116,7 @@ app.use(express.static('public', {
 // handle 404 error with simple page bringing them back to home page
 // (ALWAYS Keep this as the last route to handle all unhandled cases)
 app.get('*', function (req, res) {
-    res.redirect('404.html');
+    res.redirect('/404.html');
 });
 
 // listen on port
@@ -200,11 +200,13 @@ function getSerialIDs() {
 //       database access functions
 //////////////////////////////////////////////////////
 
-function browseCategory(user, pw, category, callback) {
+function browseCategory(user, pw, category, search, callback) {
     validateUser(user, pw, function (valid) {
         if(valid) { // authentication succeeded
+            // TODO remove SQL injection, no usernames with spaces and clean search bar
             var query = 'SELECT * FROM items WHERE username!="' + user + '"';           
             if (categories.indexOf(category) > -1) query += 'AND category="' + category + '"';            
+            query += "AND name LIKE '%"+search+"%'";
             db.all(query, function (err, rows) {
                 if(err) console.log(err); // handle error                
                 callback(randomListSelection(rows)); // use queried items

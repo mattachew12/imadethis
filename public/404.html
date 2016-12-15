@@ -22,16 +22,9 @@
         <hr class="my-2">
         <p>If you believe this is an error, contact us at <strong><a href="mailto:support@imadethis.com">support@imadethis.com</a></strong>.</p>
         <p class="lead">
-            <button class="btn btn-primary btn-lg" onclick="goBack();">Back to Home</button>
+            <a class="btn btn-primary btn-lg" href="/">Back to Home</a>
         </p>
     </div>
-
-    <script>
-        function goBack() {
-            if(window.sessionStorage.getItem('account')) window.location = 'main.html';
-            else window.location = 'login.html';
-        }
-    </script>
 </body>
 
 </html>
