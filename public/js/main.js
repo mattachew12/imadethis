@@ -45,7 +45,7 @@ function search() {
         for (index = 0; index < response.length; index++){            
             if (response[index].description == undefined) response[index].description = "";
             var len = response[index].description.length;
-            if (len > 40) len = 40;
+            if (len > 30) len = 30;
             item = '<div class="card item-card col-md-3">';
             item += '<div class="card-block">';
             item += '<h4 class="card-title">'+response[index].name+'</h4>';
