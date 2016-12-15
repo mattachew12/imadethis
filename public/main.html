@@ -34,7 +34,7 @@
     <a href="trader.html" onclick="saveVendor()">Trader</a>
 
     <div class="container-fluid" id="workspace" style="margin-top:1%;">
-        <form id="searcher" class="form-inline col-md-12" style="margin-bottom: 2%;">
+        <form class="form-inline col-md-12 profile-browse" style="margin-bottom: 2%;">
             <input type="text" class="form-control" id="searchbar" placeholder="Search" style="width: 50%;">
             <div class="btn-group">
                 <div class="dropdown">
@@ -52,87 +52,30 @@
             </div>
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
-
-        <div class="col-md-3" id="message-list" style="display: none;">
-            <div class="card card-block">
-                <h4 class="card-title">[Name]</h4>
-                <h6 class="card-subtitle text-muted">[Message Snippet ...]</h6>
-            </div>
-            <div class="card card-block">
-                <h4 class="card-title">[Name]</h4>
-                <h6 class="card-subtitle text-muted">[Message Snippet ...]</h6>
-            </div>
-        </div>
-        <div class="card col-md-9 affix" id="messageview" style="display: none;">
-            <div class=" card-block ">
-                <h4 class="card-title ">[Name]</h4>
-                <h6 class="card-subtitle text-muted ">[Username]</h6>
-            </div>
-            <hr>
-            <div class="card-block " id="msg-history ">
-                <div class="alert alert-info msg ">
-                    <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
+        <div class="profile-browse">
+            <div class="card item-card col-md-3">
+                <div class="card-block">
+                    <h4 class="card-title">[Item Name]</h4>
+                    <h6 class="card-subtitle text-muted">[Username]</h6>
                 </div>
-                <div class="msg-mine ">
-                    <div class="alert alert-info ">
-                        <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
-                    </div>
-                    <div class="alert alert-info ">
-                        <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
-                    </div>
+                <img src="img/buttons.jpg" alt="Card image">
+                <div class="card-block">
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <button class="btn btn-primary">View Item</button>
+                    <button class="btn btn-secondary">Message Seller</button>
                 </div>
-                <div class="alert alert-info msg ">
-                    <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
-                </div>
-                <div class="msg-mine ">
-                    <div class="alert alert-info ">
-                        <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
-                    </div>
-                    <div class="alert alert-info ">
-                        <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card-block form-inline " style="width:100%; ">
-                <input type="text " class="form-control " id="newmessage " placeholder="Type a message... " style="width: 90%; ">
-                <button class="btn btn-primary ">Send</button>
             </div>
         </div>
     </div>
 
     <script>
-        function saveVendor (){
-            window.sessionStorage.setItem('vendorName', 'kiliman');
-        }
-    
+        var account = JSON.parse(window.sessionStorage.getItem('account'));
+
         window.onload = function () {
-            var account = JSON.parse(window.sessionStorage.getItem('account'));
             document.getElementById('hello-username').innerHTML = 'Hello, ' + account.u;
-        }             
 
         function navClick(action) {
-            var xhr = new XMLHttpRequest();
-
-            switch(action) {
-            case 'browse':
-                document.getElementById('searcher').setAttribute('style', 'margin-bottom: 2%;');
-                document.getElementById('message-list').setAttribute('style', 'margin-bottom: 2%; display: none;');
-                document.getElementById('messageview').setAttribute('style', 'margin-bottom: 2%; display: none;');
-                break;
-            case 'inbox':
-                document.getElementById('searcher').setAttribute('style', 'margin-bottom: 2%; display: none;');
-                document.getElementById('message-list').setAttribute('style', 'margin-bottom: 2%;');
-                document.getElementById('messageview').setAttribute('style', 'margin-bottom: 2%;');
-                break;
-            case 'history':
-                document.getElementById('searcher').setAttribute('style', 'margin-bottom: 2%; display: none;');
-                document.getElementById('message-list').setAttribute('style', 'margin-bottom: 2%; display: none;');
-                document.getElementById('messageview').setAttribute('style', 'margin-bottom: 2%; display: none;');
-                break;
-            }
-
-            xhr.open('POST', '/' + action);
-            xhr.send();
+            console.log(action);
         }
     </script>
     
