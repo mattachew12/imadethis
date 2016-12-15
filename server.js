@@ -22,6 +22,7 @@ var cookieParser = require('cookie-parser');
 
 // initialize server variables
 var port = process.env.PORT || 8080;
+var randBrowseLength = 6;
 var app = express();
 app.use(cookieParser());
 
@@ -90,6 +91,19 @@ app.post('/getPossTradeItems', function (req, res) {
                     vendorItems: vendorRows
                 }));
             });
+        });
+    });
+});
+
+app.post('/randItemsFromCat', function (req, res) {
+    var d = '';
+    req.on('data', (data) => {
+        d += data;
+    });
+    req.on('end', () => {
+        var q = qs.parse(d);
+        browseCategory(q.username, q.password, q.category, (randRows) =>  {
+            res.send(JSON.stringify(randRows));
         });
     });
 });
@@ -185,6 +199,23 @@ function getSerialIDs() {
 //////////////////////////////////////////////////////
 //       database access functions
 //////////////////////////////////////////////////////
+
+function browseCategory(user, pw, category, callback) {
+    validateUser(user, pw, function (valid) {
+        if(valid) { // authentication succeeded
+            var query = 'SELECT * FROM items WHERE username!="' + user + '"';           
+            if (categories.indexOf(category) > -1) query += 'AND category="' + category + '"';            
+            db.all(query, function (err, rows) {
+                if(err) console.log(err); // handle error                
+                callback(randomListSelection(rows)); // use queried items
+            });
+        }
+        else { // no authentication            
+            console.log("invalid authentication: "+user+" | "+pw);
+            callback("invalid auth");
+        }
+    });
+}
 
 function getUserItems(user, pw, itemUser, callback) {
     validateUser(user, pw, function (valid) {
@@ -448,4 +479,15 @@ function sendFile(res, filename, contentType) {
             res.end(content, 'binary')
         }
     })
+}
+
+// makes a random selection of 6 items out of an incoming list
+function randomListSelection(incomingList){
+    var arr = []
+    while(arr.length < randBrowseLength && arr.length < incomingList.length){
+        var randomnumber = Math.floor(Math.random()*incomingList.length)
+        if(arr.indexOf(incomingList[randomnumber]) > -1) continue;
+        arr.push(incomingList[randomnumber]);
+    }
+    return arr;
 }
