@@ -33,12 +33,15 @@ function getItem(account, itemID) {
         if (response.description == undefined) response.description = "";
         item = '<div class="card item-card col-md-3">';
         item += '<div class="card-block">';
-        item += '<h4 class="card-title">'+response.name+'</h4>';            
+        item += '<h4 class="card-title">'+response.name+'</h4>';   
+        item += '<h6 class="card-subtitle text-muted">'+response.username+'</h6>';        
         item += '</div>';
         item += '<img src="/img/'+response.mainImage+'" alt="'+response.mainImage+'">';
         item += '<div class="card-block">';
         item += '<p class="card-text">'+response.description+'</p>';        
-        item += '<button class="btn btn-primary" onclick="proposeTrade('+"'"+response.username+"'"+');">Propose Trade</button>';
+        if (response.username != account.u){
+            item += '<button class="btn btn-primary" onclick="proposeTrade('+"'"+response.username+"'"+');">Propose Trade</button>';
+        }
         item += '</div>';
         item += '</div>';
         elItem.innerHTML += item;        

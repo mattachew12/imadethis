@@ -44,6 +44,8 @@ function search() {
         var index = 0;
         for (index = 0; index < response.length; index++){            
             if (response[index].description == undefined) response[index].description = "";
+            var len = response[index].description.length;
+            if (len > 40) len = 40;
             item = '<div class="card item-card col-md-3">';
             item += '<div class="card-block">';
             item += '<h4 class="card-title">'+response[index].name+'</h4>';
@@ -51,7 +53,7 @@ function search() {
             item += '</div>';
             item += '<img src="/img/'+response[index].mainImage+'" alt="'+response[index].mainImage+'">';
             item += '<div class="card-block">';
-            item += '<p class="card-text">'+response[index].description+'</p>';
+            item += '<p class="card-text">'+response[index].description.substr(0, len)+'</p>';
             item += '<button class="btn btn-primary" onclick="viewItem('+response[index].itemID+');">View Item</button>';
             item += '<button class="btn btn-secondary" onclick="proposeTrade('+"'"+response[index].username+"'"+');">Propose Trade</button>';
             item += '</div>';

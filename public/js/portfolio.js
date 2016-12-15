@@ -25,18 +25,20 @@ function getMyItems() {
     ajax.onload = function () {
         var response = JSON.parse(this.responseText);
         elMyItems = document.getElementById("myItems");
-        elMyItems.innerHTML = "";        
+        elMyItems.innerHTML = "";          
         var index = 0;
         for (index = 0; index < response.length; index++){            
             if (response[index].description == undefined) response[index].description = "";
+            var len = response[index].description.length;
+            if (len > 40) len = 40;
             item = '<div class="card item-card col-md-3">';
             item += '<div class="card-block">';
             item += '<h4 class="card-title">'+response[index].name+'</h4>';            
             item += '</div>';
             item += '<img src="/img/'+response[index].mainImage+'" alt="'+response[index].mainImage+'">';
             item += '<div class="card-block">';
-            item += '<p class="card-text">'+response[index].description+'</p>';
-            item += '<button class="btn btn-primary">Delete Item</button>'; // TODO
+            item += '<p class="card-text">'+response[index].description.substr(0,len)+'</p>';
+            //item += '<button class="btn btn-primary">Delete Item</button>'; // TODO
             item += '</div>';
             item += '</div>';
             elMyItems.innerHTML += item;

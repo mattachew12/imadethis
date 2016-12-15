@@ -65,3 +65,8 @@ function populatePossTradeItems() {
     ajax.open('POST', '/getPossTradeItems');
     ajax.send('username=' + account.u + '&password=' + account.p + '&other=' + vendorName);   
 }
+
+function viewItem(itemID){
+    window.sessionStorage.setItem('itemID', itemID);
+    window.location = "/item.html";
+}
