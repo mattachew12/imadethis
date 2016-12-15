@@ -151,8 +151,7 @@
             var rememberme = document.getElementById('rememberme');
 
             var ajax = new XMLHttpRequest();
-            ajax.onload = function () {
-                console.log(this.responseText);
+            ajax.onload = function () {                
                 switch(this.responseText) {
                 case 'login-fail':
                     username.parentElement.setAttribute('class', 'form-group has-danger');
@@ -174,7 +173,6 @@
             }
             ajax.open('POST', '/login');
             ajax.send('username=' + username.value + '&password=' + password.value);
-            console.log('username=' + username.value + '&password=' + password.value);
         }
 
         // populates register account form with username and password
