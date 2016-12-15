@@ -54,7 +54,7 @@ function search() {
             item += '</div>';
             elBrowseItems.innerHTML += item;
         }
-        if (elBrowseItems.innerHTML === "") elMyItems.innerHTML = "No Items Found";     
+        if (elBrowseItems.innerHTML === "") elBrowseItems.innerHTML = "No Items Found";     
     }
     ajax.open('POST', '/randItemsFromCat');
     ajax.send('username=' + account.u + '&password=' + account.p + '&category=' + category + '&search=' + searchVal);   
