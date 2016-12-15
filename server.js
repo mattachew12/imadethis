@@ -7,7 +7,7 @@
  * - Nikhil Castelino
  * - Matthew Piazza
  */
- 
+
 //////////////////////////////////////////////////////
 //       initialization
 //////////////////////////////////////////////////////
@@ -39,22 +39,28 @@ getSerialIDs(); // no conflict running in parallel with createDatabaseTables
 //       POST/GET requests
 //////////////////////////////////////////////////////
 
-app.get('/', function (req, res) {res.redirect('main.html')});
+app.get('/', function (req, res) {
+    res.redirect('main.html')
+});
 
 // check permissions through cookies before loading the page
-app.get(['/main.html', '/trader.html', '/portfolio.html', '/item.html'], function (req, res) { 
+app.get(['/main.html', '/trader.html', '/portfolio.html', '/item.html'], function (req, res) {
     db.get('SELECT * FROM users WHERE username="' + req.cookies.user + '" AND password="' + req.cookies.password + '"', function (err, row) {
-        if (!row) res.redirect('login.html');
-        else res.sendFile(req.path, {root: __dirname + '/public/'});
-    });    
+        if(!row) res.redirect('login.html');
+        else res.sendFile(req.path, {
+            root: __dirname + '/public/'
+        });
+    });
 });
 
 // auto-login with cookies
-app.get(['/login.html'], function (req, res) { 
+app.get(['/login.html'], function (req, res) {
     db.get('SELECT * FROM users WHERE username="' + req.cookies.user + '" AND password="' + req.cookies.password + '"', function (err, row) {
-        if (row) res.redirect('main.html');
-        else res.sendFile(req.path, {root: __dirname + '/public/'});
-    });   
+        if(row) res.redirect('main.html');
+        else res.sendFile(req.path, {
+            root: __dirname + '/public/'
+        });
+    });
 });
 
 app.post('/login', function (req, res) {
@@ -70,8 +76,12 @@ app.post('/login', function (req, res) {
 
             else if(!row) res.end('login-fail');
             else {
-                res.cookie('user', q.username, { maxAge: 7200000});
-                res.cookie('password', q.password, { maxAge: 7200000});
+                res.cookie('user', q.username, {
+                    maxAge: 7200000
+                });
+                res.cookie('password', q.password, {
+                    maxAge: 7200000
+                });
                 res.end('login-success');
             }
         });
@@ -85,7 +95,7 @@ app.post('/randItemsFromCat', function (req, res) {
     });
     req.on('end', () => {
         var q = qs.parse(d);
-        browseCategory(q.username, q.password, q.category, q.search, (randRows) =>  {
+        browseCategory(q.username, q.password, q.category, q.search, (randRows) => {
             res.send(JSON.stringify(randRows));
         });
     });
@@ -98,7 +108,7 @@ app.post('/portfolio', function (req, res) {
     });
     req.on('end', () => {
         var q = qs.parse(d);
-        getUserItems(q.username, q.password, q.username, (clientRows) =>  {
+        getUserItems(q.username, q.password, q.username, (clientRows) => {
             res.send(JSON.stringify(clientRows));
         });
     });
@@ -111,8 +121,8 @@ app.post('/getPossTradeItems', function (req, res) {
     });
     req.on('end', () => {
         var q = qs.parse(d);
-        getUserItems(q.username, q.password, q.username, (clientRows) =>  {
-            getUserItems(q.username, q.password, q.other, (vendorRows) =>  {
+        getUserItems(q.username, q.password, q.username, (clientRows) => {
+            getUserItems(q.username, q.password, q.other, (vendorRows) => {
                 res.send(JSON.stringify({
                     clientItems: clientRows,
                     vendorItems: vendorRows
@@ -123,22 +133,22 @@ app.post('/getPossTradeItems', function (req, res) {
 });
 
 // TODO save it from renaming old file
-app.post('/upload', function saveUpload(req, res){  
-  var form = new formidable.IncomingForm(); // create an incoming form object
-  form.multiples = true; // specify that we want to allow the user to upload multiple files in a single request
-  form.uploadDir = path.join(__dirname, '/public/img');    
-  form.on('file', function(field, file) { // rename it to it's original name after the temp name is created
-    fs.rename(file.path, path.join(form.uploadDir, file.name));
-  });
+app.post('/upload', function saveUpload(req, res) {
+    var form = new formidable.IncomingForm(); // create an incoming form object
+    form.multiples = true; // specify that we want to allow the user to upload multiple files in a single request
+    form.uploadDir = path.join(__dirname, '/public/img');
+    form.on('file', function (field, file) { // rename it to it's original name after the temp name is created
+        fs.rename(file.path, path.join(form.uploadDir, file.name));
+    });
 
-  // log any errors that occur
-  form.on('error', function(err) {
-    console.log('An error has occured: \n' + err);
-  });
-  form.on('end', function() {
-    res.end('success');
-  }); 
-  form.parse(req); // parse the incoming request containing the form data
+    // log any errors that occur
+    form.on('error', function (err) {
+        console.log('An error has occured: \n' + err);
+    });
+    form.on('end', function () {
+        res.end('success');
+    });
+    form.parse(req); // parse the incoming request containing the form data
 });
 
 app.post('/addNewItem', function (req, res) {
@@ -148,7 +158,7 @@ app.post('/addNewItem', function (req, res) {
     });
     req.on('end', () => {
         var q = qs.parse(d);
-        addItem(q.username, q.password, q.name, q.desc, q.cat, q.main, [], (success) =>  {
+        addItem(q.username, q.password, q.name, q.desc, q.cat, q.main, [], (success) => {
             res.send(success);
         });
     });
@@ -250,16 +260,16 @@ function browseCategory(user, pw, category, search, callback) {
     validateUser(user, pw, function (valid) {
         if(valid) { // authentication succeeded
             // TODO remove SQL injection, no usernames with spaces and clean search bar
-            var query = 'SELECT * FROM items WHERE username!="' + user + '"';           
-            if (categories.indexOf(category) > -1) query += 'AND category="' + category + '"';            
-            query += "AND name LIKE '%"+search+"%'";
+            var query = 'SELECT * FROM items WHERE username!="' + user + '"';
+            if(categories.indexOf(category) > -1) query += 'AND category="' + category + '"';
+            query += "AND name LIKE '%" + search + "%'";
             db.all(query, function (err, rows) {
                 if(err) console.log(err); // handle error                
                 callback(randomListSelection(rows)); // use queried items
             });
         }
         else { // no authentication            
-            console.log("invalid authentication: "+user+" | "+pw);
+            console.log("invalid authentication: " + user + " | " + pw);
             callback("invalid auth");
         }
     });
@@ -275,7 +285,7 @@ function getUserItems(user, pw, itemUser, callback) {
             });
         }
         else { // no authentication            
-            console.log("invalid authentication: "+user+" | "+pw);
+            console.log("invalid authentication: " + user + " | " + pw);
             callback("invalid auth");
         }
     });
@@ -341,7 +351,7 @@ function addItem(user, pw, name, desc, category, mainImg, otherImages, callback)
                     for(index = 0; index < otherImages.length; ++index) {
                         db.run('INSERT INTO itemImages VALUES ("' + row.itemID + '", "' + otherImages[index] + '")');
                     }
-                }, function() {
+                }, function () {
                     callback("success");
                 });
             });
@@ -533,10 +543,10 @@ function sendFile(res, filename, contentType) {
 }
 
 // makes a random selection of 6 items out of an incoming list
-function randomListSelection(incomingList){
+function randomListSelection(incomingList) {
     var arr = []
-    while(arr.length < randBrowseLength && arr.length < incomingList.length){
-        var randomnumber = Math.floor(Math.random()*incomingList.length)
+    while(arr.length < randBrowseLength && arr.length < incomingList.length) {
+        var randomnumber = Math.floor(Math.random() * incomingList.length)
         if(arr.indexOf(incomingList[randomnumber]) > -1) continue;
         arr.push(incomingList[randomnumber]);
     }
